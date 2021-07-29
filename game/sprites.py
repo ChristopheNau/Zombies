@@ -299,18 +299,31 @@ class Obstacle(pg.sprite.Sprite):
         self.rect.y = self.y
 
 class RemovableObstacle(pg.sprite.Sprite):
-    def __init__(self, game, x, y, w, h):
-        self.groups = game.door_sprites
+    def __init__(self, game, name, x, y, w, h):
+        self.groups = game.all_sprites, game.door_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         
         self.game = game
+        self.name = name
         self.x = x
         self.y = y
         
-        self.rect = pg.Rect(x, y, w, h)
+        self.load_images()
+        self.image = self.removable_object_images[self.name]
+        self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
-                
+
+    def load_images(self):
+        self.removable_object_images = {
+            "door": self.game.spritesheet_tiles.get_image(1554, 296, 64, 64),
+            "door2": self.game.spritesheet_tiles.get_image(1554, 370, 64, 64)
+        }
+        
+        for item in self.removable_object_images.keys():
+            img = self.removable_object_images[item]
+            img = img.set_colorkey(BLACK)            
+
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self._layer = MOB_LAYER
@@ -364,7 +377,6 @@ class Mob(pg.sprite.Sprite):
         for img in self.mob_images:
             img = img.set_colorkey(BLACK)
         
-    
     def avoid_mobs(self):
         # check each active mob
         for mob in self.game.mob_sprites:
@@ -375,8 +387,7 @@ class Mob(pg.sprite.Sprite):
                 # each mob too close to the current mob affects its accelaration
                 if 0 < dist.length() < MOB_AVOID_RADIUS:
                     self.acc += dist.normalize()
-                
-    
+                   
     def update(self):
         # rotate the mob to face the player
         # (player.pos - mob.pos) = vector from mob to player
@@ -667,3 +678,112 @@ class MuzzleFlash(pg.sprite.Sprite):
     def update(self):
         if pg.time.get_ticks() - self.spawn_time > FLASHDURATION:
             self.kill()
+
+# Class for hostages
+# Hostage follow the player, are saved when they reach the rescue zone
+class Hostage(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self._layer = HOSTAGE_LAYER
+        self.groups = game.all_sprites, game.hostage_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        
+        self.game = game
+        self.x = x
+        self.y = y
+        
+        # load graphics
+        self.load_images()
+        # use .copy() as all mobs use the same image
+        # and we modify it when addding the health bar in drow_health() 
+        self.image_origin = random.choice(self.hostage_images)
+        self.image = self.image_origin
+        self.rect = self.image.get_rect()
+        # need to specifically set the rectangle's position to (x,y)
+        # if not, the hostage will spawn at (0,0) and then move to its position in "update"
+        # if there is a wall at (0, 0), the player's hit_rect will collide with the wall, be moved to the edge of the wall and be stuck behind it
+        self.rect.center = (x, y)
+
+        self.hit_rect = HOSTAGE_HIT_RECT.copy()
+        # set the collision rectangle's center at the image rectangle's center
+        self.hit_rect.center = self.rect.center        
+        
+        self.pos = vec(x, y)
+        self.rect.center = self.pos
+
+        # speed and acceleration
+        # define velocity and acceleration vectors for the mobs
+        # use acceleration for more realistic mouvements
+        # (the mob must slow down before it changes direction)
+        self.vel = vec(0, 0)
+        self.acc = vec(0, 0)
+        self.speed = HOSTAGE_SPEED
+
+        # target the hostages turn to and follow
+        self.target = self.game.player
+
+    def load_images(self):
+        self.hostage_images = [
+            self.game.spritesheet_characters.get_image(390, 176, 35, 43),
+            self.game.spritesheet_characters.get_image(386,  44, 36, 43),
+            self.game.spritesheet_characters.get_image(353, 132, 36, 43),
+            self.game.spritesheet_characters.get_image(460, 132, 33, 43)
+        ]
+        
+        for img in self.hostage_images:
+            img = img.set_colorkey(BLACK)
+
+    # ensure that hostage don't get too close from each other
+    # and don't "merge"
+    def avoid_hostages(self):
+        # check each active mob
+        for hostage in self.game.hostage_sprites:
+            # except the hostage we are looking at
+            if hostage != self:
+                # distance between the 2 mobs
+                dist = self.pos - hostage.pos
+                # each hostage too close to the current mob affects its accelaration
+                if 0 < dist.length() < HOSTAGE_AVOID_RADIUS:
+                    self.acc += dist.normalize()
+
+
+    def update(self):
+        # rotate the hostage to face the player
+        # (player.pos - hostage.pos) = vector from hostage to player
+        # vec(1,0) => X horizon
+        target_dist = self.target.pos - self.pos
+        # if the distance to the target is not too big
+        # target_dist is a vector; .length() returns its length 
+        # (.length = sqrt(target_dist.x ** 2 + target_dist.y ** 2))
+        # calculating sqrt() is slow. 
+        # use .length.squared() instead and compare it to HOSTAGE_DECTECT_RADIUS squared
+        if target_dist.length_squared() < HOSTAGE_DETECT_RADIUS ** 2:
+            # the hostage is too close, it stops
+            if target_dist.length_squared() < 1500:
+              self.vel = vec(0, 0)
+            else:
+              self.rot = target_dist.angle_to(vec(1,0))
+              self.image = pg.transform.rotate(self.image_origin, self.rot)
+              self.rect = self.image.get_rect()
+              self.rect.center = self.pos
+              # accelerate the hostage towards the player
+              # acceleration is a unique vector
+              self.acc = vec(1, 0).rotate(-self.rot)
+  
+              self.avoid_hostages()
+
+              self.acc.scale_to_length(self.speed)
+              # reduce acceleration by friction
+              # the faster the mob goes, the less it accelerates
+              # this is needed to limit its maximum speed
+              self.acc += self.vel * HOSTAGE_FRICTION
+              # set the player's velocity and position using the equations of motion
+              self.vel += self.acc * self.game.dt
+              self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
+              self.hit_rect.centerx = self.pos.x
+              collide_with_walls(self, self.game.wall_sprites, "x")
+              collide_with_walls(self, self.game.door_sprites, "x")
+              self.hit_rect.centery = self.pos.y
+              collide_with_walls(self, self.game.wall_sprites, "y")
+              collide_with_walls(self, self.game.door_sprites, "y")
+              self.rect.center = self.hit_rect.center
+

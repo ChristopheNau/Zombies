@@ -128,20 +128,9 @@ class Game:
         self.effect_sprites = pg.sprite.Group()
         # group for all items the player can pick up
         self.item_sprites = pg.sprite.Group()
-        
-        # draw map and spawn player
-        # old version: uses a simple text file for the map
-        # row == Y coordinate of the tiles
-        #for row, tiles in enumerate(self.map.data):
-        #    # col == X coordinate of each tile in the line
-        #    for col, tile in enumerate(tiles):
-        #        if tile == "1":
-        #            Wall(self, col, row)
-        #        if tile == "P":
-        #            self.player = Player(self, col, row)
-        #        if tile == "M":
-        #            Mob(self, col, row)
-                
+        # group for all hostages the player needs to save
+        self.hostage_sprites = pg.sprite.Group()
+                        
         # go through all the object layer in the map to create the walls and spawn the player
         # the player will be blocked by
         for tile_object in self.map.tmxdata.objects:
@@ -155,7 +144,7 @@ class Game:
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
             # some obstacles can be removed from the scene
             if tile_object.name in ["door", "door2"]:
-                RemovableObstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+                RemovableObstacle(self, tile_object.name, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
             # spawn the zombies
             if tile_object.name == "zombie":
                 Mob(self, object_center.x, object_center.y)                
@@ -170,6 +159,9 @@ class Game:
                 Item(self, object_center, "bullets_gun")
             if tile_object.name == "bullets_machine":
                 Item(self, object_center, "bullets_machine")
+            # spawn the hostages
+            if tile_object.name == "hostage":
+                Hostage(self, object_center.x, object_center.y)
             
             
         
@@ -284,7 +276,12 @@ class Game:
             BulletImpact(self, impact_position, "mob")
             # Mob hit sound
             random.choice(self.zombie_hit_sounds).play()
-            
+
+        # collision between bullet and removable objects (doors, etc)
+        hits = pg.sprite.groupcollide(self.door_sprites, self.bullet_sprites, False, True)
+        for hit in hits:
+          hit.kill()
+
     # Game loop - events
     def events(self):
         for event in pg.event.get():

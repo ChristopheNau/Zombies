@@ -46,9 +46,11 @@ GRIDHEIGHT = HEIGHT / TILESIZE
 WALL_LAYER = 1
 PLAYER_LAYER = 2
 MOB_LAYER = 2
+HOSTAGE_LAYER = 2
 BULLET_LAYER = 3
 EFFECT_LAYER = 4
 ITEM_LAYER = 1
+
 
 # Sounds
 BG_MUSIC = 'espionage.ogg'
@@ -65,7 +67,7 @@ EFFECTS_SOUNDS = {'level_start': 'level_start.wav',
 
 # Player settings
 PLAYER_LAYER = 2
-PLAYER_SPEED = 500
+PLAYER_SPEED = 1000
 PLAYER_IMG = "manBlue_gun.png"
 PLAYER_ROTATION_SPEED = 250 # in degre per second
 # rectangle to be used for the collisions
@@ -121,7 +123,15 @@ MOB_DAMAGE = 10
 MOB_KNOCKBACK = 20
 MOB_AVOID_RADIUS = 50
 # how far the mobs can see
-MOB_DETECT_RADIUS = 400
+MOB_DETECT_RADIUS = 1000
+
+# Hostages
+# how far in the hostages can see
+HOSTAGE_DETECT_RADIUS = 500
+HOSTAGE_SPEED = 100
+HOSTAGE_FRICTION = -1
+HOSTAGE_HIT_RECT = pg.Rect(0, 0, 30, 30)
+HOSTAGE_AVOID_RADIUS = 75
 
 # Explosion animation speed (delay between 2 frames in ms)
 EXPLOSION_FRAMERATE = 75

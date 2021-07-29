@@ -1,0 +1,467 @@
+.sprite {
+    background-image: url(spritesheet.png);
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.sprite-blackSmoke00 {
+    width: 362px;
+    height: 336px;
+    background-position: -5px -5px;
+}
+
+.sprite-blackSmoke01 {
+    width: 398px;
+    height: 364px;
+    background-position: -377px -5px;
+}
+
+.sprite-blackSmoke02 {
+    width: 386px;
+    height: 342px;
+    background-position: -785px -5px;
+}
+
+.sprite-blackSmoke03 {
+    width: 351px;
+    height: 367px;
+    background-position: -1181px -5px;
+}
+
+.sprite-blackSmoke04 {
+    width: 386px;
+    height: 364px;
+    background-position: -1542px -5px;
+}
+
+.sprite-blackSmoke05 {
+    width: 377px;
+    height: 348px;
+    background-position: -1938px -5px;
+}
+
+.sprite-blackSmoke06 {
+    width: 368px;
+    height: 407px;
+    background-position: -2325px -5px;
+}
+
+.sprite-blackSmoke07 {
+    width: 395px;
+    height: 397px;
+    background-position: -2703px -5px;
+}
+
+.sprite-blackSmoke08 {
+    width: 378px;
+    height: 415px;
+    background-position: -3108px -5px;
+}
+
+.sprite-blackSmoke09 {
+    width: 338px;
+    height: 360px;
+    background-position: -3496px -5px;
+}
+
+.sprite-blackSmoke10 {
+    width: 372px;
+    height: 370px;
+    background-position: -785px -375px;
+}
+
+.sprite-blackSmoke11 {
+    width: 393px;
+    height: 327px;
+    background-position: -3496px -375px;
+}
+
+.sprite-blackSmoke12 {
+    width: 373px;
+    height: 364px;
+    background-position: -5px -712px;
+}
+
+.sprite-blackSmoke13 {
+    width: 371px;
+    height: 388px;
+    background-position: -388px -712px;
+}
+
+.sprite-blackSmoke14 {
+    width: 378px;
+    height: 404px;
+    background-position: -1167px -712px;
+}
+
+.sprite-blackSmoke15 {
+    width: 378px;
+    height: 371px;
+    background-position: -1555px -712px;
+}
+
+.sprite-blackSmoke16 {
+    width: 360px;
+    height: 371px;
+    background-position: -1943px -712px;
+}
+
+.sprite-blackSmoke17 {
+    width: 350px;
+    height: 398px;
+    background-position: -2313px -712px;
+}
+
+.sprite-blackSmoke18 {
+    width: 382px;
+    height: 359px;
+    background-position: -2673px -712px;
+}
+
+.sprite-blackSmoke19 {
+    width: 356px;
+    height: 382px;
+    background-position: -3065px -712px;
+}
+
+.sprite-blackSmoke20 {
+    width: 369px;
+    height: 350px;
+    background-position: -3431px -712px;
+}
+
+.sprite-blackSmoke21 {
+    width: 386px;
+    height: 394px;
+    background-position: -769px -1072px;
+}
+
+.sprite-blackSmoke22 {
+    width: 366px;
+    height: 385px;
+    background-position: -3431px -1072px;
+}
+
+.sprite-blackSmoke23 {
+    width: 367px;
+    height: 402px;
+    background-position: -5px -1467px;
+}
+
+.sprite-blackSmoke24 {
+    width: 393px;
+    height: 371px;
+    background-position: -1165px -1467px;
+}
+
+.sprite-explosion00 {
+    width: 583px;
+    height: 536px;
+    background-position: -1568px -1467px;
+}
+
+.sprite-explosion01 {
+    width: 634px;
+    height: 585px;
+    background-position: -2161px -1467px;
+}
+
+.sprite-explosion02 {
+    width: 620px;
+    height: 526px;
+    background-position: -2805px -1467px;
+}
+
+.sprite-explosion03 {
+    width: 574px;
+    height: 636px;
+    background-position: -3435px -1467px;
+}
+
+.sprite-explosion04 {
+    width: 600px;
+    height: 618px;
+    background-position: -5px -2003px;
+}
+
+.sprite-explosion05 {
+    width: 572px;
+    height: 545px;
+    background-position: -615px -2113px;
+}
+
+.sprite-explosion06 {
+    width: 583px;
+    height: 590px;
+    background-position: -2805px -2003px;
+}
+
+.sprite-explosion07 {
+    width: 634px;
+    height: 521px;
+    background-position: -1197px -2113px;
+}
+
+.sprite-explosion08 {
+    width: 603px;
+    height: 590px;
+    background-position: -1841px -2113px;
+}
+
+.sprite-fart00 {
+    width: 543px;
+    height: 547px;
+    background-position: -3398px -2113px;
+}
+
+.sprite-fart01 {
+    width: 579px;
+    height: 575px;
+    background-position: -5px -2670px;
+}
+
+.sprite-fart02 {
+    width: 608px;
+    height: 561px;
+    background-position: -594px -2670px;
+}
+
+.sprite-fart03 {
+    width: 564px;
+    height: 588px;
+    background-position: -1212px -2670px;
+}
+
+.sprite-fart04 {
+    width: 586px;
+    height: 629px;
+    background-position: -2454px -2670px;
+}
+
+.sprite-fart05 {
+    width: 520px;
+    height: 554px;
+    background-position: -3050px -2670px;
+}
+
+.sprite-fart06 {
+    width: 592px;
+    height: 566px;
+    background-position: -1786px -3234px;
+}
+
+.sprite-fart07 {
+    width: 605px;
+    height: 563px;
+    background-position: -3050px -3234px;
+}
+
+.sprite-fart08 {
+    width: 571px;
+    height: 550px;
+    background-position: -3899px -5px;
+}
+
+.sprite-flash00 {
+    width: 550px;
+    height: 496px;
+    background-position: -3899px -565px;
+}
+
+.sprite-flash01 {
+    width: 463px;
+    height: 482px;
+    background-position: -4019px -1071px;
+}
+
+.sprite-flash02 {
+    width: 563px;
+    height: 524px;
+    background-position: -4019px -1563px;
+}
+
+.sprite-flash03 {
+    width: 463px;
+    height: 495px;
+    background-position: -4019px -2097px;
+}
+
+.sprite-flash04 {
+    width: 483px;
+    height: 502px;
+    background-position: -3951px -2602px;
+}
+
+.sprite-flash05 {
+    width: 525px;
+    height: 534px;
+    background-position: -3665px -3114px;
+}
+
+.sprite-flash06 {
+    width: 473px;
+    height: 557px;
+    background-position: -5px -3658px;
+}
+
+.sprite-flash07 {
+    width: 549px;
+    height: 521px;
+    background-position: -488px -3658px;
+}
+
+.sprite-flash08 {
+    width: 516px;
+    height: 542px;
+    background-position: -1047px -3658px;
+}
+
+.sprite-whitePuff00 {
+    width: 381px;
+    height: 346px;
+    background-position: -382px -1563px;
+}
+
+.sprite-whitePuff01 {
+    width: 345px;
+    height: 374px;
+    background-position: -773px -1563px;
+}
+
+.sprite-whitePuff02 {
+    width: 382px;
+    height: 360px;
+    background-position: -4200px -3114px;
+}
+
+.sprite-whitePuff03 {
+    width: 353px;
+    height: 383px;
+    background-position: -2388px -3484px;
+}
+
+.sprite-whitePuff04 {
+    width: 375px;
+    height: 378px;
+    background-position: -4200px -3484px;
+}
+
+.sprite-whitePuff05 {
+    width: 337px;
+    height: 378px;
+    background-position: -2454px -2097px;
+}
+
+.sprite-whitePuff06 {
+    width: 400px;
+    height: 383px;
+    background-position: -3665px -3658px;
+}
+
+.sprite-whitePuff07 {
+    width: 367px;
+    height: 362px;
+    background-position: -1573px -3872px;
+}
+
+.sprite-whitePuff08 {
+    width: 419px;
+    height: 384px;
+    background-position: -1950px -3872px;
+}
+
+.sprite-whitePuff09 {
+    width: 368px;
+    height: 405px;
+    background-position: -2751px -3872px;
+}
+
+.sprite-whitePuff10 {
+    width: 349px;
+    height: 417px;
+    background-position: -3129px -3872px;
+}
+
+.sprite-whitePuff11 {
+    width: 406px;
+    height: 370px;
+    background-position: -4075px -3872px;
+}
+
+.sprite-whitePuff12 {
+    width: 348px;
+    height: 385px;
+    background-position: -4480px -5px;
+}
+
+.sprite-whitePuff13 {
+    width: 367px;
+    height: 401px;
+    background-position: -4480px -400px;
+}
+
+.sprite-whitePuff14 {
+    width: 392px;
+    height: 350px;
+    background-position: -4492px -811px;
+}
+
+.sprite-whitePuff15 {
+    width: 394px;
+    height: 377px;
+    background-position: -4492px -1171px;
+}
+
+.sprite-whitePuff16 {
+    width: 361px;
+    height: 384px;
+    background-position: -4492px -2097px;
+}
+
+.sprite-whitePuff17 {
+    width: 385px;
+    height: 345px;
+    background-position: -4492px -2491px;
+}
+
+.sprite-whitePuff18 {
+    width: 360px;
+    height: 364px;
+    background-position: -1786px -2846px;
+}
+
+.sprite-whitePuff19 {
+    width: 377px;
+    height: 411px;
+    background-position: -4491px -3872px;
+}
+
+.sprite-whitePuff20 {
+    width: 379px;
+    height: 384px;
+    background-position: -5px -4293px;
+}
+
+.sprite-whitePuff21 {
+    width: 371px;
+    height: 376px;
+    background-position: -394px -4293px;
+}
+
+.sprite-whitePuff22 {
+    width: 361px;
+    height: 391px;
+    background-position: -775px -4293px;
+}
+
+.sprite-whitePuff23 {
+    width: 381px;
+    height: 409px;
+    background-position: -1146px -4293px;
+}
+
+.sprite-whitePuff24 {
+    width: 370px;
+    height: 362px;
+    background-position: -1537px -4293px;
+}

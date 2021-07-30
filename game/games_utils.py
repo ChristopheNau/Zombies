@@ -7,6 +7,31 @@ import pygame as pg
 import pytmx
 from settings import *
 
+# function to wait for user to press a key
+def wait_for_key(game, which_key="any"):
+  waiting = True
+  while waiting:
+    # static screen, don't need to run at a high FPS
+    pg.display.set_caption("{:.2f}".format(game.clock.get_fps()))
+    game.clock.tick(10)
+    pg.display.set_caption("{:.2f}".format(game.clock.get_fps()))
+
+    # wait for user's action
+    for event in pg.event.get():
+      # if the user closes the game window => end the waiting loop and the game
+      if event.type == pg.QUIT:
+        waiting = False
+        game.running = False
+      # if the user presses and releases any key, end the waiting loop
+      if event.type == pg.KEYUP:
+        if which_key == "any":
+          waiting = False
+        else:
+          if event.key == pg.K_RETURN:
+            waiting = False
+
+
+
 # function to draw text onto the screen
 def draw_text(surface, text, font_name, size, color, x, y, align="nw"):
     font = pg.font.Font(font_name, size)
@@ -32,7 +57,6 @@ def draw_text(surface, text, font_name, size, color, x, y, align="nw"):
         text_rect.center = (x, y)
     surface.blit(text_surface, text_rect)
 
-
 # pg.sprite.spritecollide uses the sprite's image rectangle
 # no matter how many other rectangle we have
 # need to modify this to use the player's hit rectangle instead
@@ -56,8 +80,7 @@ class Spritesheet:
         image = pg.transform.scale(image, (round(width / resize_factor), round(height / resize_factor)))
         return image
  
- 
-# basic version: uses a simple text file to build the map
+ # basic version: uses a simple text file to build the map
 class Map:
     def __init__(self, filename):
         # load map data
@@ -74,7 +97,6 @@ class Map:
         self.width = self.tilewidth * TILESIZE
         self.height = self.tileheight * TILESIZE
         
-
 # class to display tiled maps generated with Tiled (https://www.mapeditor.org/)
 class TiledMap():
     def __init__(self, filename):
@@ -118,8 +140,7 @@ class TiledMap():
         self.render(temp_surface)
         return temp_surface
     
-        
-# "Camera" keeps track of how big the whole map is
+        # "Camera" keeps track of how big the whole map is
 # whenever the player moves, calculates the offset
 # by how much the player (or any reference sprite) has shifted (with self.update(player)) 
 # use the offset to draw everything on the screen shifted by that amount 

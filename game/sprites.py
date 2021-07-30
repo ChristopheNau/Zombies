@@ -721,6 +721,9 @@ class Hostage(pg.sprite.Sprite):
         # target the hostages turn to and follow
         self.target = self.game.player
 
+        # health - hostages can be killed by bullets
+        self.health = HOSTAGE_HEALTH
+
     def load_images(self):
         self.hostage_images = [
             self.game.spritesheet_characters.get_image(390, 176, 35, 43),
@@ -787,3 +790,7 @@ class Hostage(pg.sprite.Sprite):
               collide_with_walls(self, self.game.door_sprites, "y")
               self.rect.center = self.hit_rect.center
 
+        if self.health <= 0:
+          self.kill()
+          # game over
+          self.game.playing = False

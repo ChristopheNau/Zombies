@@ -54,6 +54,7 @@ ITEM_LAYER = 1
 
 # Sounds
 BG_MUSIC = 'espionage.ogg'
+GAME_OVER_MUSIC = 'hard_times.ogg'
 PLAYER_HIT_SOUNDS = ['pain/8.wav', 'pain/9.wav', 'pain/10.wav', 'pain/11.wav']
 ZOMBIE_MOAN_SOUNDS = ['brains2.wav', 'brains3.wav', 'zombie-roar-1.wav', 'zombie-roar-2.wav',
                       'zombie-roar-3.wav', 'zombie-roar-5.wav', 'zombie-roar-6.wav', 'zombie-roar-7.wav']
@@ -67,7 +68,7 @@ EFFECTS_SOUNDS = {'level_start': 'level_start.wav',
 
 # Player settings
 PLAYER_LAYER = 2
-PLAYER_SPEED = 1000
+PLAYER_SPEED = 500
 PLAYER_IMG = "manBlue_gun.png"
 PLAYER_ROTATION_SPEED = 250 # in degre per second
 # rectangle to be used for the collisions
@@ -128,10 +129,11 @@ MOB_DETECT_RADIUS = 1000
 # Hostages
 # how far in the hostages can see
 HOSTAGE_DETECT_RADIUS = 500
-HOSTAGE_SPEED = 100
+HOSTAGE_SPEED = 150
 HOSTAGE_FRICTION = -1
 HOSTAGE_HIT_RECT = pg.Rect(0, 0, 30, 30)
 HOSTAGE_AVOID_RADIUS = 75
+HOSTAGE_HEALTH = 25
 
 # Explosion animation speed (delay between 2 frames in ms)
 EXPLOSION_FRAMERATE = 75

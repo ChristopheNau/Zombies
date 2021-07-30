@@ -179,8 +179,7 @@ class Game:
                 
         # actually start the game
         self.run()
-        
-        
+               
     # game loop
     def run(self):
         self.playing = True
@@ -263,7 +262,7 @@ class Game:
             self.player.pos += vec(MOB_KNOCKBACK, 0).rotate(-hits[0].rot)
         
         # collision between bullet and mob
-        # when collision => remove the bullet and kill the mob
+        # when collision => remove the bullet and decrease mob's health until they die
         hits = pg.sprite.groupcollide(self.mob_sprites, self.bullet_sprites, False, True)
         for hit in hits:
             #print(hit.rect, hit.rect.center, hit.rect.topleft, hit.rect.bottomright)
@@ -282,6 +281,18 @@ class Game:
         for hit in hits:
           hit.kill()
 
+        # collision between bullet and hostage
+        # when collision => remove the bullet and decrese the hostage's health
+        # if a hostage dies => game over 
+        hits = pg.sprite.groupcollide(self.hostage_sprites, self.bullet_sprites, False, True)
+        for hit in hits:
+            #print(hit.rect, hit.rect.center, hit.rect.topleft, hit.rect.bottomright)
+            hit.health -= GUN_PROPERTIES[self.player.current_weapon]["BULLET_DAMAGE"]
+            # stop the hostage when it's hit by a bullet
+            hit.vel = vec(0,0)
+            # play sound when hostage is hit (same sound as when player is hit) 
+            random.choice(self.player_hit_sounds).play()
+
     # Game loop - events
     def events(self):
         for event in pg.event.get():
@@ -290,14 +301,12 @@ class Game:
                 # stop the game
                 # otherwise clicking on the red cross will not close the window
                 if self.playing:
-                    self.playing = False
-                    self.running = False
+                    self.quit()
             # check for key presses
             if event.type == pg.KEYDOWN:
                 # ESC closes the game
                 if event.key == pg.K_ESCAPE:
-                    self.playing = False
-                    self.running = False
+                    self.quit()
                 # 'p' toggle pauses the game
                 if event.key == pg.K_p:
                     self.paused = not self.paused
@@ -322,8 +331,7 @@ class Game:
                 # 'h' switches the debug layer
                 if event.key == pg.K_h:
                     self.draw_debug = not self.draw_debug
-                
-    
+                   
     # draw game's grid
     def draw_grid(self):
         # vertical lines
@@ -333,7 +341,6 @@ class Game:
         for y in range(0, HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y),(WIDTH, y))
                 
-
     # Game loop - draw
     def draw(self):
         # display FPS as game's title to check game's performance (whilst developping, for ddebugging)
@@ -392,23 +399,51 @@ class Game:
         # once everything is ready to be displayed
         # *after* drawing everything, flip the display
         pg.display.flip()
-        
-        
+                
     # splash (entry) screen
     def show_start_screen(self):
         pass
         
     # Game over screen
-    def show_go_screen(self):
-        pass
-        
+    def show_gameover_screen(self):
+        # if the user closes the game window, don't display the game over screen (otherwise the game won't quit) 
+        if not self.running:
+            return
+
+        # stop the game's music
+        pg.mixer.music.fadeout(500)
+        # play the game over music
+        #pg.mixer.music.load(os.path.join(self.sound_folder, GAME_OVER_MUSIC))
+        #pg.mixer.music.play(loops=-1)
+
+        # display dim screen (partially transparent black)
+        self.screen.blit(self.dim_screen, (0,0))
+
+        draw_text(self.screen, "Game Over!", self.title_font, 64, WHITE, WIDTH / 2, HEIGHT / 4, "center")
+        draw_text(self.screen, "You killed an hostage!", self.title_font, 64, WHITE, WIDTH / 2, HEIGHT / 4 + 60, "center")
+        draw_text(self.screen, "Press RETURN to play again", self.title_font, 40, WHITE, WIDTH / 2, HEIGHT / 2 + 80, "center")
+
+        # display all graphical elements
+        pg.display.flip() 
+
+        # wait for user to press the 'return' key
+        wait_for_key(self, "return")
+
+        # stop the game over music
+        #pg.mixer.music.stop()
+
+    # Quit the game
+    def quit(self):
+      self.playing = False
+      self.running = False
+
 if __name__  == "__main__":
     g = Game()
     g.show_start_screen()
     
     while g.running:
-        g.new()
-        g.show_go_screen()
+      g.new()
+      g.show_gameover_screen()
     
     # end of the game loop => quit game
     print("thank you for playing that game")

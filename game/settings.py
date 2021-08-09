@@ -29,7 +29,8 @@ BROWN     = (106,  55,   5)
 BGCOLOR   = BROWN
 
 # Fonts
-FONT_NAME = "ZOMBIE.TTF"
+TITLE_FONT_NAME = "ZOMBIE.TTF"
+HUD_FONT_NAME = "Impacted2.0.ttf"
 
 # Spritesheets
 SPRITESHEET_CHARACTERS = "spritesheet_characters.png"
@@ -63,7 +64,7 @@ WEAPON_SOUNDS_GUN = ['sfx_weapon_singleshot2.wav']
 EFFECTS_SOUNDS = {'level_start': 'level_start.wav',
                   'health_up': 'health_pack.wav',
                   'reload_gun': 'gun_reload.ogg',
-                  'outofammo': 'outofammo.wav' 
+                  'outofammo': 'outofammo.wav'
                   }
 
 # Player settings
@@ -72,7 +73,7 @@ PLAYER_SPEED = 500
 PLAYER_IMG = "manBlue_gun.png"
 PLAYER_ROTATION_SPEED = 250 # in degre per second
 # rectangle to be used for the collisions
-# we can't use the player's rectangle as its size changes 
+# we can't use the player's rectangle as its size changes
 # when the player rotates
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
 # how far from the center of the sprite is the gun
@@ -82,34 +83,34 @@ PLAYER_HEALTH = 100
 # Weapon settings
 BULLET_IMG = "bullet.png"
 GUN_PROPERTIES = {
-    "gun": {
-        # When the player fires a bullet, he moves back a bit
-        "KICKBACK": 200, 
-        # make shooting inaccurate
-        "GUN_SPREAD": 5,
-        # delay between bullet shots 
-        "BULLET_RATE": 300, 
-        "BULLET_SPEED": 1000,
-        # bullet dissappears after 1s  
-        "BULLET_LIFETIME": 1000, 
-        # damage points to mob
-        "BULLET_DAMAGE": 10,
-        # initial and maximum nb of bullets that come with than gun
-        "NB_BULLETS": 15,
-        # how long it takes to reload the gun
-        "RELOAD_TIME": 500
-    },
-    "machine": {
-        "KICKBACK": 300, 
-        "GUN_SPREAD": 15, 
-        "BULLET_RATE": 100, 
-        "BULLET_SPEED": 1500, 
-        "BULLET_LIFETIME": 1000, 
-        "BULLET_DAMAGE": 20,
-        "NB_BULLETS": 50,
-        "RELOAD_TIME": 3000
-    },
-}     
+  "gun": {
+    # When the player fires a bullet, he moves back a bit
+    "KICKBACK": 200,
+    # make shooting inaccurate
+    "GUN_SPREAD": 5,
+    # delay between bullet shots
+    "BULLET_RATE": 300,
+    "BULLET_SPEED": 1000,
+    # bullet dissappears after 1s
+    "BULLET_LIFETIME": 1000,
+    # damage points to mob
+    "BULLET_DAMAGE": 10,
+    # initial and maximum nb of bullets that come with than gun
+    "NB_BULLETS": 15,
+    # how long it takes to reload the gun
+    "RELOAD_TIME": 500
+  },
+  "machine": {
+    "KICKBACK": 300,
+    "GUN_SPREAD": 15,
+    "BULLET_RATE": 100,
+    "BULLET_SPEED": 1500,
+    "BULLET_LIFETIME": 1000,
+    "BULLET_DAMAGE": 20,
+    "NB_BULLETS": 50,
+    "RELOAD_TIME": 3000
+  },
+}
 # how long the bullet impact should be displayed for
 BULLETIMPACTDURATION = 50
 # MUZZLE FLASH lifetime
@@ -124,7 +125,11 @@ MOB_DAMAGE = 10
 MOB_KNOCKBACK = 20
 MOB_AVOID_RADIUS = 50
 # how far the mobs can see
-MOB_DETECT_RADIUS = 1000
+# if player is closer, mob rush towards it
+MOB_DETECT_RADIUS = 300
+# how far the mobs can "smell" the player
+# if player is closer, mob start to move towards it, following the shortest path
+MOB_SEARCH_RADIUS = 600
 
 # Hostages
 # how far in the hostages can see
@@ -134,6 +139,9 @@ HOSTAGE_FRICTION = -1
 HOSTAGE_HIT_RECT = pg.Rect(0, 0, 30, 30)
 HOSTAGE_AVOID_RADIUS = 75
 HOSTAGE_HEALTH = 25
+
+# Hostage hit animationn (alpha change)
+HOSTAGE_DAMAGE_ALPHA = [i for i in range(0, 256, 25)]
 
 # Explosion animation speed (delay between 2 frames in ms)
 EXPLOSION_FRAMERATE = 75
@@ -150,4 +158,3 @@ BULLET_PACK_AMOUNT_GUN = 10
 BOB_RANGE = 15
 # how fast the items jump up and down
 BOB_SPEED = 0.4
-

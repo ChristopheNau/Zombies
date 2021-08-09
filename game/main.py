@@ -8,7 +8,7 @@ import random
 import os
 from settings import *
 from sprites import *
-#from tilemap import *
+import time
 
 # HUD functions
 def draw_player_health(surf, x, y, pct):
@@ -39,17 +39,20 @@ class Game:
         # game window
         self.screen = pg.display.set_mode((WIDTH,HEIGHT))
         # tile of the game window
-        pg.display.set_caption(GAMETITLE)
+        #pg.display.set_caption(GAMETITLE)
         # used to handle game speed and to ensure the game runs at the FPS we decide
         self.clock = pg.time.Clock()
         # keyboard repeat rate to keep player moving
         # whilst a key is pressed
         pg.key.set_repeat(500, 100)
-        
+
         self.load_data()
-                
+
+        # all tiles that can be considered in the pathfinding algorithm
+        self.passable_tiles = []
+
         self.running = True
-            
+
     def load_data(self):
         # set up assets folders
         game_folder = os.path.dirname(__file__)
@@ -57,21 +60,12 @@ class Game:
         self.sound_folder = os.path.join(game_folder, "sounds")
         self.music_folder = os.path.join(game_folder, "music")
         self.map_folder = os.path.join(game_folder, "maps")
-        
-        # create and draw the map
-        # old version: uses simple text files
-        #self.map = Map(os.path.join(self.map_folder, "map3.txt"))
-        # new version: uses a tiled file
-        self.map = TiledMap(os.path.join(self.map_folder, "office_2nd_floor.tmx"))
-        self.map_img = self.map.make_map()
-        # get the map's rectangle to be able to locate the map on the screen for where to draw it
-        self.map_rect = self.map_img.get_rect()
-        
+
         # load sprites from Spritesheet
         self.spritesheet_characters = Spritesheet(os.path.join(self.img_folder, SPRITESHEET_CHARACTERS))
         self.spritesheet_tiles = Spritesheet(os.path.join(self.img_folder, SPRITESHEET_TILES))
         self.spritesheet_explosions = Spritesheet(os.path.join(self.img_folder, SPRITESHEET_EXPLOSIONS))
-        
+
         # sound loading
         pg.mixer.music.load(os.path.join(self.music_folder, BG_MUSIC))
         # general sound effects (level start, pick up objects)
@@ -84,24 +78,25 @@ class Game:
         for snd in WEAPON_SOUNDS_GUN:
             self.weapon_sounds["gun"].append(pg.mixer.Sound(os.path.join(self.sound_folder, snd)))
         # zombie sounds
-        self.zombie_moan_sounds = [] 
+        self.zombie_moan_sounds = []
         for snd in ZOMBIE_MOAN_SOUNDS:
             s = pg.mixer.Sound(os.path.join(self.sound_folder, snd))
             # zombie sounds are loud. Reduce their volume
             s.set_volume(0.1)
             self.zombie_moan_sounds.append(s)
         # zombie hit sound
-        self.zombie_hit_sounds = [] 
+        self.zombie_hit_sounds = []
         for snd in ZOMBIE_HIT_SOUNDS:
-            self.zombie_hit_sounds.append(pg.mixer.Sound(os.path.join(self.sound_folder, snd)))        
+            self.zombie_hit_sounds.append(pg.mixer.Sound(os.path.join(self.sound_folder, snd)))
         # player hit sound
-        self.player_hit_sounds = [] 
+        self.player_hit_sounds = []
         for snd in PLAYER_HIT_SOUNDS:
             self.player_hit_sounds.append(pg.mixer.Sound(os.path.join(self.sound_folder, snd)))
-        
+
         # font
-        self.title_font = os.path.join(self.img_folder, FONT_NAME)
-        
+        self.title_font = os.path.join(self.img_folder, TITLE_FONT_NAME)
+        self.hud_font = os.path.join(self.img_folder, HUD_FONT_NAME)
+
         # image to dim the screen
         # simple surface, same size as the screen
         # filled with black, semi transparent
@@ -120,6 +115,8 @@ class Game:
         self.wall_sprites = pg.sprite.Group()
         # group for removable obstacles (doors)
         self.door_sprites = pg.sprite.Group()
+        # group for rescue zone
+        self.rescue_sprites = pg.sprite.Group()
         # group for all the mobs
         self.mob_sprites = pg.sprite.Group()
         # group for all bullets
@@ -130,24 +127,42 @@ class Game:
         self.item_sprites = pg.sprite.Group()
         # group for all hostages the player needs to save
         self.hostage_sprites = pg.sprite.Group()
-                        
+        # group for all tiles
+        self.tile_sprites = pg.sprite.Group()
+
+        # create and draw the map
+        # old version: uses simple text files
+        #self.map = Map(os.path.join(self.map_folder, "map3.txt"))
+        # new version: uses a tiled file
+        self.map = TiledMap(os.path.join(self.map_folder, "office_2nd_floor.tmx"))
+        self.map_img = self.map.make_map()
+        # get the map's rectangle to be able to locate the map on the screen for where to draw it
+        self.map_rect = self.map_img.get_rect()
+
         # go through all the object layer in the map to create the walls and spawn the player
         # the player will be blocked by
         for tile_object in self.map.tmxdata.objects:
-            object_center = vec(tile_object.x + tile_object.width / 2, 
-                                tile_object.y + tile_object.height / 2)
+            object_center = vec(tile_object.x + tile_object.width / 2,
+                              tile_object.y + tile_object.height / 2)
             # if the object is a player => spawn the player at the object's position
             if tile_object.name == "player":
-                self.player = Player(self, object_center.x, object_center.y)                
+                self.player = Player(self, object_center.x, object_center.y)
+
             # all obstacles have the name "wall" in the tmx file
             if tile_object.name == "wall":
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
             # some obstacles can be removed from the scene
             if tile_object.name in ["door", "door2"]:
                 RemovableObstacle(self, tile_object.name, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+            # rescue zone
+            if tile_object.name == "rescue_zone":
+                RescueZone(self, tile_object.x,
+                           tile_object.y, tile_object.width,
+                           tile_object.height)
             # spawn the zombies
             if tile_object.name == "zombie":
-                Mob(self, object_center.x, object_center.y)                
+                #print(f"Spawn a mob at ({object_center.x}, {object_center.y}) which is tile ({int(object_center.x // TILESIZE)}, {int(object_center.y // TILESIZE)}) - Neighbors= {list(find_neighbors(self, (object_center // TILESIZE)))}")
+                Mob(self, object_center.x, object_center.y)
             # spawn the items
             if tile_object.name == "health":
                 Item(self, object_center, "health")
@@ -162,24 +177,51 @@ class Game:
             # spawn the hostages
             if tile_object.name == "hostage":
                 Hostage(self, object_center.x, object_center.y)
-            
-            
-        
+
+
+        # get list of all tiles
+        self.all_tiles = self.map.get_all_tiles()
+
+        # create a sprite for each tile and check with ones collide with a wall
+        for tile in self.all_tiles:
+            Tile(self, tile[0], tile[1])
+        # check collision between the tiles and the walls
+        # and remove the tiles that collide
+        # This gives us a list of "clean" tiles that can be used in the pathfinding algorithm
+        pg.sprite.groupcollide(self.wall_sprites, self.tile_sprites, False,
+                               True)
+
+        for t in self.tile_sprites:
+            current = (t.rect.x // TILESIZE, t.rect.y // TILESIZE)
+            self.passable_tiles.append(current)
+
+        # calculate path to player
+        self.calculate_path_to_player()
+
         # camera to follow the player
         self.camera = Camera(self.map.width, self.map.height)
-        
+
         # debug layer
         self.draw_debug = False
-        
+
         # variable to pause the game
         self.paused = False
-        
+
         # play the level start sound
         self.effects_sounds["level_start"].play()
-                
+
         # actually start the game
         self.run()
-               
+
+    # calculate path to player
+    def calculate_path_to_player(self):
+        self.path = breadth_first_search(self, self.player.get_tile())
+        for mob in self.mob_sprites:
+            mob.path_to_player = follow_path(mob.get_tile(), self.path)
+        #for hostage in self.hostage_sprites:
+        #    hostage.path_to_player = follow_path(hostage.get_tile(), self.path)
+
+
     # game loop
     def run(self):
         self.playing = True
@@ -193,14 +235,14 @@ class Game:
             self.dt = self.clock.tick(FPS) / 1000
             # check for events, update the sprites and draw them
             self.events()
-            
+
             # update is what moves everything
-            # pause the music if game is paused and 
+            # pause the music if game is paused and
             # only update if the game is NOT paused
             if not self.paused:
                 self.update()
             self.draw()
-        
+
     # Game loop - updates
     def update(self):
         # all sprites are in a group. The line below is all we need in the Update section
@@ -230,7 +272,7 @@ class Game:
                     self.player.equip("machine")
                 else:
                     self.player.bullets["machine"] += BULLET_PACK_AMOUNT_MACHINE
-                self.effects_sounds["reload_gun"].play()
+                    self.effects_sounds["reload_gun"].play()
                 hit.kill()
             # found bullets!
             if hit.type == "bullets_gun":
@@ -241,14 +283,14 @@ class Game:
                 self.effects_sounds["reload_gun"].play()
                 self.player.bullets["machine"] += BULLET_PACK_AMOUNT_MACHINE
                 hit.kill()
-        
+
         # check collision between mob and player's hit_rect
         hits = pg.sprite.spritecollide(self.player, self.mob_sprites, False, collide_hit_rect)
         for hit in hits:
             # player hit sound
             if random.random() < 0.7:
                 random.choice(self.player_hit_sounds).play()
-            
+
             self.player.health -= MOB_DAMAGE
             # stop the mob when it hit the player
             hit.vel = vec(0, 0)
@@ -256,22 +298,27 @@ class Game:
             if self.player.health <= 0:
                 self.playing = False
         # move the player away from the mob that hit it
-        # otherwise, the mob keeps on hitting the player for each frame 
+        # otherwise, the mob keeps on hitting the player for each frame
         # and the player's health decreases all at once
         if hits:
             self.player.pos += vec(MOB_KNOCKBACK, 0).rotate(-hits[0].rot)
-        
+
         # collision between bullet and mob
         # when collision => remove the bullet and decrease mob's health until they die
         hits = pg.sprite.groupcollide(self.mob_sprites, self.bullet_sprites, False, True)
-        for hit in hits:
-            #print(hit.rect, hit.rect.center, hit.rect.topleft, hit.rect.bottomright)
-            hit.health -= GUN_PROPERTIES[self.player.current_weapon]["BULLET_DAMAGE"]
+        for mob in hits:
+            #mob.health -= GUN_PROPERTIES[self.player.current_weapon]["BULLET_DAMAGE"]
+            # we may have multiple bullets on screen, from different weapons
+            # check which bullet(s) hit the mob
+            # to decreased its health accordingly
+            for bullet in hits[mob]:
+                mob.health -= bullet.damage
+
             # stop the mob when it's hit by a bullet
-            hit.vel = vec(0,0)
+            mob.vel = vec(0,0)
             # show some mob's blood
-            impact_position = (random.randint(hit.rect.topleft[0], hit.rect.topright[0]), 
-                                random.randint(hit.rect.bottomleft[1], hit.rect.bottomright[1]))
+            impact_position = (random.randint(mob.rect.topleft[0], mob.rect.topright[0]),
+                                  random.randint(mob.rect.bottomleft[1], mob.rect.bottomright[1]))
             BulletImpact(self, impact_position, "mob")
             # Mob hit sound
             random.choice(self.zombie_hit_sounds).play()
@@ -279,19 +326,22 @@ class Game:
         # collision between bullet and removable objects (doors, etc)
         hits = pg.sprite.groupcollide(self.door_sprites, self.bullet_sprites, False, True)
         for hit in hits:
-          hit.kill()
+            hit.kill()
 
         # collision between bullet and hostage
         # when collision => remove the bullet and decrese the hostage's health
-        # if a hostage dies => game over 
+        # if a hostage dies => game over
         hits = pg.sprite.groupcollide(self.hostage_sprites, self.bullet_sprites, False, True)
         for hit in hits:
-            #print(hit.rect, hit.rect.center, hit.rect.topleft, hit.rect.bottomright)
-            hit.health -= GUN_PROPERTIES[self.player.current_weapon]["BULLET_DAMAGE"]
-            # stop the hostage when it's hit by a bullet
-            hit.vel = vec(0,0)
-            # play sound when hostage is hit (same sound as when player is hit) 
-            random.choice(self.player_hit_sounds).play()
+            hit.hit()
+
+        # collision between hostage and rescue zone
+        # when collision => hostage is saved
+        hits = pg.sprite.groupcollide(self.hostage_sprites,
+                                       self.rescue_sprites, False, False)
+        for hit in hits:
+            print("Hostage rescued")
+            hit.kill()
 
     # Game loop - events
     def events(self):
@@ -322,16 +372,27 @@ class Game:
                 if event.key == pg.K_e:
                     if self.player.current_weapon != "none":
                         current = self.player.weapons_owned.index(self.player.current_weapon)
-                        next = (self.player.weapons_owned.index(self.player.current_weapon) + 1) % len(self.player.weapons_owned)
+                        next = (current + 1) % len(self.player.weapons_owned)
                         self.player.current_weapon = self.player.weapons_owned[next]
-                # 'a' opens all doors (debug)
-                if event.key == pg.K_a:
-                    for i in self.door_sprites:
-                        i.kill()
                 # 'h' switches the debug layer
                 if event.key == pg.K_h:
                     self.draw_debug = not self.draw_debug
-                   
+                # 'w' prints the list of passable tiles
+                if event.key == pg.K_w:
+                    for w in self.passable_tiles:
+                        print(w)
+                # 't' prints if the tile under the mouse collides with a wall
+                if event.key == pg.K_t:
+                    print(f"Neighbors of {self.player.get_tile()} => {find_neighbors(self, self.player.get_tile())}")
+
+            if event.type == pg.KEYUP:
+                # 'a' recalculates the path to player
+                if event.key == pg.K_a:
+                    start = time.time()
+                    print("Calculating....")
+                    self.calculate_path_to_player()
+                    print(f"Done in {time.time() - start}")
+
     # draw game's grid
     def draw_grid(self):
         # vertical lines
@@ -340,21 +401,21 @@ class Game:
         # vertical lines
         for y in range(0, HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y),(WIDTH, y))
-                
+
     # Game loop - draw
     def draw(self):
         # display FPS as game's title to check game's performance (whilst developping, for ddebugging)
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        
+
         # self.screen.fill(BGCOLOR)
-        
+
         # draw the map
         # applying the camera offset to it
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
-        
+
         # draw the grid to visualize it easily
         # self.draw_grid()
-        
+
         # all sprites are in a group. The line below is all we need in the Draw section
         #self.all_sprites.draw(self.screen)
         for sprite in self.all_sprites:
@@ -369,25 +430,27 @@ class Game:
             if self.draw_debug:
                 pg.draw.rect(self.screen, RED, self.camera.apply_rect(sprite.hit_rect), 1)
                 pg.draw.rect(self.screen, WHITE, self.camera.apply_rect(sprite.rect), 1)
-        
+
         # draw debug layer for all the walls
         if self.draw_debug:
             for wall in self.wall_sprites:
                 pg.draw.rect(self.screen, RED, self.camera.apply_rect(wall.rect), 1)
             for door in self.door_sprites:
-                pg.draw.rect(self.screen, RED, self.camera.apply_rect(door.rect), 1)            
+                pg.draw.rect(self.screen, RED, self.camera.apply_rect(door.rect), 1)
 
         # draw a rectangle around the player to visualize it
         #pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2)
         #pg.draw.rect(self.screen, RED, self.player.hit_rect, 2)
-        
+
         # draw player's health on top of the screen
         # and not right above the player as we do for mobs
         draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
         # bar for bullets left
         if self.player.current_weapon != "none":
             draw_player_health(self.screen, 10, 30, self.player.bullets_loaded[self.player.current_weapon] / GUN_PROPERTIES[self.player.current_weapon]["NB_BULLETS"])
-                
+
+        # display number of hostages left to save
+        draw_text(self.screen, f"{len(self.hostage_sprites)} hostages", self.hud_font, 30, BLACK,WIDTH - 10, HEIGHT - 50, "ne")
 
         if self.paused:
             # dim the screen by adding a semi-transparent dark image
@@ -399,14 +462,14 @@ class Game:
         # once everything is ready to be displayed
         # *after* drawing everything, flip the display
         pg.display.flip()
-                
+
     # splash (entry) screen
     def show_start_screen(self):
         pass
-        
+
     # Game over screen
     def show_gameover_screen(self):
-        # if the user closes the game window, don't display the game over screen (otherwise the game won't quit) 
+        # if the user closes the game window, don't display the game over screen (otherwise the game won't quit)
         if not self.running:
             return
 
@@ -424,7 +487,7 @@ class Game:
         draw_text(self.screen, "Press RETURN to play again", self.title_font, 40, WHITE, WIDTH / 2, HEIGHT / 2 + 80, "center")
 
         # display all graphical elements
-        pg.display.flip() 
+        pg.display.flip()
 
         # wait for user to press the 'return' key
         wait_for_key(self, "return")
@@ -434,18 +497,17 @@ class Game:
 
     # Quit the game
     def quit(self):
-      self.playing = False
-      self.running = False
+        self.playing = False
+        self.running = False
 
 if __name__  == "__main__":
     g = Game()
     g.show_start_screen()
-    
+
     while g.running:
-      g.new()
-      g.show_gameover_screen()
-    
+        g.new()
+        g.show_gameover_screen()
+
     # end of the game loop => quit game
-    print("thank you for playing that game")
-    pg.quit() 
-        
+    #print("thank you for playing that game")
+    pg.quit()

@@ -4,6 +4,7 @@
 
 import pygame as pg
 import pytmx
+import heapq
 from settings import *
 from collections import deque
 vec = pg.math.Vector2
@@ -35,15 +36,15 @@ def find_neighbors(game, node):
     #neighbors = filter(lambda game: passable(game), neighbors)
     #neighbors = filter(passable, neighbors)
 
-    # add variation in the order of neighbors to avoid long straight paths 
-    if (node.x + node.y) % 2:
-      neighbors.reverse()
+    # add variation in the order of neighbors to avoid long straight paths
+    #if (node.x + node.y) % 2:
+    #    neighbors.reverse()
 
     # remove neighbors which are not a "passable" tile
     new_neighbors = []
     for n in neighbors:
-      if n in game.passable_tiles:
-        new_neighbors.append(n)
+        if vec2int(n) in game.passable_tiles:
+            new_neighbors.append(n)
 
     return new_neighbors
 
@@ -51,6 +52,18 @@ def find_neighbors(game, node):
 # that we can use as a key for a dict()
 def vec2int(v):
     return (int(v.x), int(v.y))
+
+# calculates the cost of moving from tile1 to tile2
+def get_cost(game, from_node, to_node):
+    # if moving horizontaly or verticaly
+    if (vec(to_node) - vec(from_node)).length_squared() == 1:
+        # use a factor of 10 to manipulate integers (10 and 14 instead 1 and 1.4)
+        # return the cost of moving to the destination node (or zero if to_node has not weight associated to it) + 1
+        return game.passable_tiles[to_node]["weight"] + 10
+    # moving in diagonal
+    else:
+        # cost to move = cost of the to_node + 14
+        return game.passable_tiles[to_node]["weight"] + 14
 
 # visit all tiles using breadth_first_search
 # calculates the path between any 2 tiles (super long)
@@ -86,25 +99,114 @@ def breadth_first_search(game, start):
     #    print(k,v)
     return path
 
+# Dijkstra search
+def dijkstra_search(game, start, end):
+    frontier = PriorityQueue()
+    # cost to start = 0 (we are already there)
+    frontier.put(vec2int(start), 0)
+    # keep track of the path
+    # key = node, value = vector pointing to the node
+    path = {}
+    # keep track of what the cost to move to each node is, as we examine them
+    cost = {}
+
+    path[vec2int(start)] = None
+    cost[vec2int(start)] = 0
+
+    # as long as the current node has neighbors
+    while not frontier.empty():
+        # frontier is a heap queue
+        # each time we get an element, it's the one with the highest priority (lowest cost)
+        current = frontier.get()
+
+        # stop if we found the goal to avoid looking at all nodes all the times
+        if current == end:
+            break
+
+        # look through all neighbors
+        for next in find_neighbors(game, current):
+            next = vec2int(next)
+            # cost of moving to this neighbor
+            # cost = cost ot move up to current +.cost to move to the next node
+            next_cost = cost[current] + get_cost(game, current, next)
+
+            # if next node not in cost (we haven't calculated its cost yet)
+            # or if we found a lower cost than the one we have previously calculated for the next node
+            if next not in cost or next_cost < cost[next]:
+                cost[next] = next_cost
+                priority = next_cost
+                frontier.put(next, priority)
+                # add the direction vector to the path
+                path[next] = vec(current) - vec(next)
+    return path
+
+def heuristic(node1, node2):
+    # Manhattan distance calculation
+    # (how far are the 2 nodes)
+    # multiply the distance by 10 to keep the same factor
+    # as the cost of moving from one tile to the other
+    return (abs(node1.x - node2.x) + abs(node1.y - node2.y)) * 10
+
+# A Star search
+def a_star_search(game, start, end):
+    frontier = PriorityQueue()
+    # cost to start = 0 (we are already there)
+    frontier.put(vec2int(start), 0)
+    # keep track of the path
+    # key = node, value = vector pointing to the node
+    path = {}
+    # keep track of what the cost to move to each node is, as we examine them
+    cost = {}
+
+    path[vec2int(start)] = None
+    cost[vec2int(start)] = 0
+
+    # as long as the current node has neighbors
+    while not frontier.empty():
+        # frontier is a heap queue
+        # each time we get an element, it's the one with the highest priority (lowest cost)
+        current = frontier.get()
+
+        # stop if we found the goal to avoid looking at all nodes all the times
+        if current == end:
+            break
+
+        # look through all neighbors
+        for next in find_neighbors(game, current):
+            next = vec2int(next)
+            # cost of moving to this neighbor
+            # cost = cost ot move up to current +.cost to move to the next node
+            next_cost = cost[current] + get_cost(game, current, next)
+
+            # if next node not in cost (we haven't calculated its cost yet)
+            # or if we found a lower cost than the one we have previously calculated for the next node
+            if next not in cost or next_cost < cost[next]:
+                cost[next] = next_cost
+                priority = next_cost + heuristic(end, vec(next))
+                frontier.put(next, priority)
+                # add the direction vector to the path
+                path[next] = vec(current) - vec(next)
+    return path
+
 
 # returns the path between 2 tiles
-# must have calculated the breadth_first_search first
+# must have calculated the path before
 def follow_path(start, path):
     current = start
     path_to_follow = []
     path_to_follow.append(vec2int(start))
     try:
-      while path[vec2int(current)] != None:
-          current = current + path[vec2int(current)]
-          path_to_follow.append(vec2int(current))
-      path_to_follow.reverse()
-      # remove last element (ie current tile)
-      path_to_follow.pop()
-      #print(f"Path from {start}: {path_to_follow}")
+        while path[vec2int(current)] != None:
+            current = current + path[vec2int(current)]
+            path_to_follow.append(vec2int(current))
+        path_to_follow.reverse()
+        # remove last element (ie current tile)
+        path_to_follow.pop()
+        #print(f"Path to {start}: {path_to_follow}")
     # KeyError if no path from this tile
     except KeyError:
-      pass
-      #print(f"No path from {current} ({current * TILESIZE})")
+        pass
+        #print(f"No path from {current} ({current * TILESIZE})")
     return path_to_follow
 
 # function to wait for user to press a key
@@ -134,7 +236,7 @@ def wait_for_key(game, which_key="any"):
                         waiting = False
 
 # function to draw text onto the screen
-def draw_text(surface, text, font_name, size, color, x, y, align="nw"):
+def draw_text(surface, text, font_name, size, color, x, y, align="center"):
     font = pg.font.Font(font_name, size)
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
@@ -166,6 +268,32 @@ def draw_text(surface, text, font_name, size, color, x, y, align="nw"):
 def collide_hit_rect(one, two):
     return one.hit_rect.colliderect(two.rect)
 
+
+# utility class to easily manipulate priority (heap) queues
+# (priority = cost)
+# heap queues automatically order a list by increasing priority of its elements (highest prio is lowest cost)
+# used in Disjkstra and A* searches
+class PriorityQueue:
+    def __init__(self):
+        self.nodes = []
+
+    # add an element "node" with prio "cost" to the list of nodes
+    def put(self, node, cost):
+        heapq.heappush(self.nodes, (cost, node))
+
+    # get the 1st node in the heapqueue
+    # we don't care about the node itself for pathfiding but its cost
+    # => [1]
+    def get(self):
+        return heapq.heappop(self.nodes)[1]
+
+    # check if the heap is empty
+    # to know when our search ends
+    # if frontier is empty => search ends
+    def empty(self):
+        return len(self.nodes) == 0
+
+
 # utility class for loading and parsing spritesheets
 class Spritesheet:
     def __init__(self, filename):
@@ -185,9 +313,7 @@ class Spritesheet:
 
         return image
 
-
 # basic version: uses a simple text file to build the map
-
 # Class to handle maps based on simple text files
 class Map:
     def __init__(self, filename):
@@ -275,10 +401,6 @@ class TiledMap():
                             (x * self.tmxdata.tilewidth, y * self.tmxdata.tileheight))
 
         return self.all_tiles
-
-
-
-
 
 # "Camera" keeps track of how big the whole map is
 # whenever the player moves, calculates the offset

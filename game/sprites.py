@@ -341,12 +341,11 @@ class RescueZone(pg.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-
 # All tiles in the game are a "Tile"
 # Use this to detect collision with the walls and maintain a
 # list of tiles that can be considered in the pathfiding algorithm
 class Tile(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, weight):
         self._layer = PLAYER_LAYER
 
         self.groups = game.tile_sprites
@@ -355,11 +354,11 @@ class Tile(pg.sprite.Sprite):
         self.game = game
         self.x = x
         self.y = y
+        self.weight = weight
 
         self.rect = pg.Rect(x, y, TILESIZE, TILESIZE)
         self.rect.x = self.x
         self.rect.y = self.y
-
 
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -403,6 +402,7 @@ class Mob(pg.sprite.Sprite):
         self.speed = random.choice(MOB_SPEEDS)
 
         self.target = game.player
+        self.path = {}
         self.path_to_player = []
 
     # load all graphical elements for the mobs
@@ -437,6 +437,7 @@ class Mob(pg.sprite.Sprite):
         else:
             target_tile = vec(self.path_to_player[-1])
             target_pos =  target_tile * TILESIZE + (TILESIZE /2, TILESIZE / 2)
+            #print(target_tile, target_pos)
             self.zombie_move_towards_target(target_pos)
 
             if self.get_tile() == target_tile:
@@ -465,8 +466,9 @@ class Mob(pg.sprite.Sprite):
         try:
             self.acc.scale_to_length(self.speed)
         except ValueError:
-            print("Can't scale to length")
-            print(f"Acceleration : {self.acc} - Speed: {self.speed}")
+            pass
+            #print("Can't scale to length")
+            #print(f"Acceleration : {self.acc} - Speed: {self.speed}")
         #print(f"Mob: pos: {self.pos} - Tile: {self.get_tile()} - direction: {self.acc}")
         # reduce acceleration by friction
         # the faster the mob goes, the less it accelerates
@@ -492,11 +494,8 @@ class Mob(pg.sprite.Sprite):
         # use .length.squared() instead and compare it to MOB_DECTECT
         self.target_dist = self.target.pos - self.pos
 
-        # if mob can "smell" the player, start moving towards it
-        # following the shortest path
-        if self.target_dist.length_squared() < MOB_SEARCH_RADIUS ** 2:
-            # move zombie following the predefined path
-            self.zombie_follow_path()
+        # move zombie following the predefined path
+        self.zombie_follow_path()
 
         # if the mob is closer to the player
         # => rush towards the player
@@ -516,6 +515,12 @@ class Mob(pg.sprite.Sprite):
             self.kill()
             # explosion
             Explosion(self.game, self.rect.centerx, self.rect.centery)
+            # if all zombies are killed => game won
+            self.game.zombies_killed += 1
+            if self.game.total_zombies - self.game.zombies_killed == 0:
+                self.game.game_over_reason = "zombies_killed"
+                self.game.playing = False
+                
 
     # draw health rectangle above the mob
     def draw_health(self):
@@ -838,12 +843,17 @@ class Hostage(pg.sprite.Sprite):
         self.damaged = True
         self.damage_alpha = itertools.chain(HOSTAGE_DAMAGE_ALPHA * 2)
 
-        # decrease health
-        self.health -= GUN_PROPERTIES[self.game.player.current_weapon]["BULLET_DAMAGE"]
         # stop the hostage when it's hit by a bullet
         self.vel = vec(0,0)
         # play sound when hostage is hit (same sound as when player is hit)
         random.choice(self.game.player_hit_sounds).play()
+        # decrease health
+        self.health -= GUN_PROPERTIES[
+            self.game.player.current_weapon]["BULLET_DAMAGE"]
+        # health = 0 => game over
+        if self.health <= 0:
+          self.game.game_over_reason = "hostage_killed"
+          self.game.playing = False
 
     # get the mob's current tile
     def get_tile(self):

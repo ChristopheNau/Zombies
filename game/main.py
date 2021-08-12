@@ -49,8 +49,21 @@ class Game:
         self.load_data()
 
         # all tiles that can be considered in the pathfinding algorithm
-        self.passable_tiles = []
+        self.passable_tiles = {}
 
+        # reason for game over. Can be:
+        # - player => player killed by zombies
+        # - hostage => no more hostages left
+        self.game_over_reason = ""
+
+        # nb of hostage saved
+        self.hostage_saved = 0
+        self.total_hostages = 0
+
+        # nb Zombies total / killed
+        self.zombies_killed = 0
+        self.total_zombies = 0
+        
         self.running = True
 
     def load_data(self):
@@ -163,6 +176,7 @@ class Game:
             if tile_object.name == "zombie":
                 #print(f"Spawn a mob at ({object_center.x}, {object_center.y}) which is tile ({int(object_center.x // TILESIZE)}, {int(object_center.y // TILESIZE)}) - Neighbors= {list(find_neighbors(self, (object_center // TILESIZE)))}")
                 Mob(self, object_center.x, object_center.y)
+                self.total_zombies += 1
             # spawn the items
             if tile_object.name == "health":
                 Item(self, object_center, "health")
@@ -176,15 +190,16 @@ class Game:
                 Item(self, object_center, "bullets_machine")
             # spawn the hostages
             if tile_object.name == "hostage":
+                self.total_hostages += 1
                 Hostage(self, object_center.x, object_center.y)
-
 
         # get list of all tiles
         self.all_tiles = self.map.get_all_tiles()
 
         # create a sprite for each tile and check with ones collide with a wall
         for tile in self.all_tiles:
-            Tile(self, tile[0], tile[1])
+            # Tiles all have the same weight (TODO: get tile's weight from the TMX file)
+            Tile(self, tile[0], tile[1], 0)
         # check collision between the tiles and the walls
         # and remove the tiles that collide
         # This gives us a list of "clean" tiles that can be used in the pathfinding algorithm
@@ -193,10 +208,8 @@ class Game:
 
         for t in self.tile_sprites:
             current = (t.rect.x // TILESIZE, t.rect.y // TILESIZE)
-            self.passable_tiles.append(current)
-
-        # calculate path to player
-        self.calculate_path_to_player()
+            #self.passable_tiles[current] = True
+            self.passable_tiles[current] = {"passable": True, "weight": t.weight}
 
         # camera to follow the player
         self.camera = Camera(self.map.width, self.map.height)
@@ -210,17 +223,26 @@ class Game:
         # play the level start sound
         self.effects_sounds["level_start"].play()
 
+        # keep track of time to know when it's time
+        # to recalculate the path to player
+        self.pathfinding_timer = pg.time.get_ticks()
+
         # actually start the game
         self.run()
 
     # calculate path to player
     def calculate_path_to_player(self):
-        self.path = breadth_first_search(self, self.player.get_tile())
         for mob in self.mob_sprites:
-            mob.path_to_player = follow_path(mob.get_tile(), self.path)
+            # if mob can "smell" the player, recalculate the shortest path to the player
+            if mob.target_dist.length_squared() < MOB_SEARCH_RADIUS ** 2:
+                #mob.path = dijkstra_search(self, mob.get_tile(), self.player.get_tile())
+                mob.path = a_star_search(self, mob.get_tile(), self.player.get_tile())
+                mob.path_to_player = follow_path(self.player.get_tile(),
+                                                 mob.path)
+                mob.path_to_player.reverse()
+
         #for hostage in self.hostage_sprites:
         #    hostage.path_to_player = follow_path(hostage.get_tile(), self.path)
-
 
     # game loop
     def run(self):
@@ -245,6 +267,13 @@ class Game:
 
     # Game loop - updates
     def update(self):
+        # re-calculate path to player for each mob
+        # every 2s
+        now = pg.time.get_ticks()
+        if now - self.pathfinding_timer > PATHFINDING_REFRESH_TIMER:
+            self.pathfinding_timer = now
+            self.calculate_path_to_player()
+
         # all sprites are in a group. The line below is all we need in the Update section
         self.all_sprites.update()
         self.camera.update(self.player)
@@ -296,6 +325,7 @@ class Game:
             hit.vel = vec(0, 0)
             # no more player's health => game over
             if self.player.health <= 0:
+                self.game_over_reason = "player"
                 self.playing = False
         # move the player away from the mob that hit it
         # otherwise, the mob keeps on hitting the player for each frame
@@ -340,8 +370,13 @@ class Game:
         hits = pg.sprite.groupcollide(self.hostage_sprites,
                                        self.rescue_sprites, False, False)
         for hit in hits:
-            print("Hostage rescued")
+            #print("Hostage rescued")
             hit.kill()
+            self.hostage_saved += 1
+            if self.total_hostages - self.hostage_saved == 0:
+                # all hostage are safe
+                self.game_over_reason = "all_hostage_rescued"
+                self.playing = False
 
     # Game loop - events
     def events(self):
@@ -385,13 +420,13 @@ class Game:
                 if event.key == pg.K_t:
                     print(f"Neighbors of {self.player.get_tile()} => {find_neighbors(self, self.player.get_tile())}")
 
-            if event.type == pg.KEYUP:
-                # 'a' recalculates the path to player
-                if event.key == pg.K_a:
-                    start = time.time()
-                    print("Calculating....")
-                    self.calculate_path_to_player()
-                    print(f"Done in {time.time() - start}")
+            #if event.type == pg.KEYUP:
+            # 'a' recalculates the path to player
+            #    if event.key == pg.K_a:
+            #        start = time.time()
+            #        print("Calculating....")
+            #        self.calculate_path_to_player()
+            #        print(f"Done in {time.time() - start}")
 
     # draw game's grid
     def draw_grid(self):
@@ -465,7 +500,24 @@ class Game:
 
     # splash (entry) screen
     def show_start_screen(self):
-        pass
+        self.screen.fill(BGCOLOR)
+        draw_text(self.screen, GAMETITLE, self.title_font, 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        draw_text(self.screen, "Rescue the hostages", self.title_font, 40, WHITE, WIDTH / 2, HEIGHT / 4 + 50)
+        draw_text(self.screen, "Arrows to move", self.title_font, 22, WHITE, WIDTH / 2,
+                  HEIGHT / 2 + 20)
+        draw_text(self.screen, "Space to shot", self.title_font, 22, WHITE,
+                  WIDTH / 2, HEIGHT / 2 + 40)
+        draw_text(self.screen, "R to reload", self.title_font, 22, WHITE,
+                  WIDTH / 2, HEIGHT / 2 + 60)
+        draw_text(self.screen, "E to switch weapon", self.title_font, 22, WHITE,
+                  WIDTH / 2, HEIGHT / 2 + 80)
+        draw_text(self.screen, "Press a key to start", self.title_font, 22, WHITE, WIDTH / 2,
+                  HEIGHT * 3 / 4)
+        draw_text(self.screen, "Christophe - August 2021", self.title_font, 14, YELLOW, WIDTH / 2,
+                       HEIGHT - 15)
+        pg.display.flip()
+
+        wait_for_key(self)
 
     # Game over screen
     def show_gameover_screen(self):
@@ -482,8 +534,10 @@ class Game:
         # display dim screen (partially transparent black)
         self.screen.blit(self.dim_screen, (0,0))
 
-        draw_text(self.screen, "Game Over!", self.title_font, 64, WHITE, WIDTH / 2, HEIGHT / 4, "center")
-        draw_text(self.screen, "You killed an hostage!", self.title_font, 64, WHITE, WIDTH / 2, HEIGHT / 4 + 60, "center")
+        draw_text(self.screen, GAME_OVER_MESSAGES[self.game_over_reason][0],
+                  self.title_font, 64, WHITE, WIDTH / 2, HEIGHT / 4, "center")
+        draw_text(self.screen, GAME_OVER_MESSAGES[self.game_over_reason][1], self.title_font, 64, WHITE,
+                  WIDTH / 2, HEIGHT / 4 + 60, "center")
         draw_text(self.screen, "Press RETURN to play again", self.title_font, 40, WHITE, WIDTH / 2, HEIGHT / 2 + 80, "center")
 
         # display all graphical elements

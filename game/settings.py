@@ -1,7 +1,7 @@
 import pygame as pg
 vec = pg.math.Vector2
 
-GAMETITLE = "Tile Based Game"
+GAMETITLE = "Zombies"
 
 # size of the game window
 # must be evenly divisible by TILESIZE (we don't want partial squares)
@@ -14,19 +14,35 @@ HIGHSCORE_FILE = "highscore.txt"
 # How often should the screen be refreshed
 FPS = 60
 
+# how often should we recalculate the path to the player
+PATHFINDING_REFRESH_TIMER = 2000
+
+# Game over messages
+GAME_OVER_MESSAGES = {
+  "player": ["Game Over", "You died"],
+  "all_hostage_rescued": ["You Won", "All hostages are safe"],
+  "hostage_killed": ["Game Over", "You killed an hostage"],
+  "zombies_killed": ["You Won", "All Zombies are killed"]
+}
+
 # define useful colors
 WHITE     = (255, 255, 255)
 BLACK     = (  0,   0,   0)
+DARKGRAY  = ( 40,  40,  40)
+MEDGRAY   = ( 75,  75,  75)
+LIGHTGREY = (100, 100, 100)
 RED       = (255,   0,   0)
 GREEN     = (  0, 255,   0)
 BLUE      = (  0,   0, 255)
 YELLOW    = (255, 255,   0)
 BLUEGREEN = (  0, 155, 155)
 SKYBLUE   = (135, 206, 235)
-LIGHTGREY = (100, 100, 100)
 BROWN     = (106,  55,   5)
+FOREST    = ( 34,  57,  10)
+CYAN      = (  0, 255, 255)
+MAGENTA   = (255,   0, 255)
 
-BGCOLOR   = BROWN
+BGCOLOR   = BLACK
 
 # Fonts
 TITLE_FONT_NAME = "ZOMBIE.TTF"
@@ -134,7 +150,7 @@ MOB_SEARCH_RADIUS = 600
 # Hostages
 # how far in the hostages can see
 HOSTAGE_DETECT_RADIUS = 500
-HOSTAGE_SPEED = 150
+HOSTAGE_SPEED = 100
 HOSTAGE_FRICTION = -1
 HOSTAGE_HIT_RECT = pg.Rect(0, 0, 30, 30)
 HOSTAGE_AVOID_RADIUS = 75

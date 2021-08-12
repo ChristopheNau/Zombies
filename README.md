@@ -1,14 +1,27 @@
-Zombies
+# Zombies
+This is a simple Tile Based Game to experiment with the basic concepts of game development. Based on the excellent tutorial by [KidsCanCode on YouTube](https://www.youtube.com/watch?v=3UxnelT9aCo&list=PLsk-HSGFjnaGQq7ybM8Lgkh5EMxUWPm2i&index=1)
 
-This is a simple Tile Based Game to experiment with the basic concepts of game development
-Based on the excellent tutorial by KidsCanCode (https://www.youtube.com/watch?v=3UxnelT9aCo&list=PLsk-HSGFjnaGQq7ybM8Lgkh5EMxUWPm2i&index=1)
+## Required libraries
+* pygame
+* pytmx
+* pytweening
 
+## Key features
+* tile based game
+* A* algorithm for pathfinding
+* cheat mode (*TODO*)
 
-Required libraries:
-pygame
-pytmx
-pytweening
+## Tools used
+* Maps generated with Tiled (https://www.mapeditor.org/)
+* Sound effects generated with [sfxr.me](https://sfxr.me)
+* Most art taken from [opengameart.org](https://opengameart.org)
 
-Maps generated with Tiled (https://www.mapeditor.org/)
-Sound effects generated with sfxr.me
-Most art taken from opengameart.org
+## Controls:
+- Arrows to move
+- 'Space' to fire
+- 'r' to reload
+- 'e' to switch weapons
+
+## Goal of the game 
+locate and bring all the hostage back to the rescue zone. 
+You win the game by either killing all the zombies or rescuing all the hostages

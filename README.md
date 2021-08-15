@@ -9,6 +9,8 @@ This is a simple Tile Based Game to experiment with the basic concepts of game d
 ## Key features
 * tile based game
 * A* algorithm for pathfinding
+* random player start position
+* random amount and location for hostages, ennemies and items
 * cheat mode (*TODO*)
 
 ## Tools used

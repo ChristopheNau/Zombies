@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.1" orientation="orthogonal" renderorder="right-down" width="75" height="50" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="349">
+<map version="1.5" tiledversion="1.7.1" orientation="orthogonal" renderorder="right-down" width="75" height="50" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="486">
  <tileset firstgid="1" source="spritesheet_tiles.tsx"/>
  <layer id="3" name="Ground" width="75" height="50">
   <data encoding="csv">
@@ -65,17 +65,17 @@
 138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,109,111,111,111,111,140,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,139,111,111,111,111,111,140,0,0,0,141,0,0,0,0,0,141,0,0,0,0,0,0,141,0,0,0,0,0,0,0,0,0,0,0,438,
 138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,138,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,138,0,0,0,138,0,0,0,0,0,138,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,438,
 138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,138,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,445,0,0,0,138,142,111,111,111,111,137,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,138,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,141,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,136,111,111,111,111,111,111,111,111,111,111,111,114,
-138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,138,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,138,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,138,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,136,111,111,111,111,111,137,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,136,111,473,111,111,111,111,111,111,113,111,111,473,111,137,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,109,111,111,140,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-139,111,111,473,111,111,111,112,111,111,111,473,111,111,111,110,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,109,111,111,111,114,0,0,115,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,438,
-138,0,0,0,0,0,0,138,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,445,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,109,111,111,111,111,111,111,111,114,
+138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,138,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,141,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,139,111,111,111,111,111,111,111,111,111,111,111,114,
+138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,138,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,138,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,438,
+138,0,0,0,0,0,138,0,0,0,0,0,0,0,0,138,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,136,111,111,111,111,111,137,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,438,
+138,0,0,0,0,0,136,111,473,111,111,111,111,111,111,113,111,111,473,111,137,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,438,
+138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,115,0,0,0,0,0,0,0,0,0,0,0,438,
+138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,446,0,0,0,0,0,0,0,0,0,0,0,438,
+138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,141,0,0,0,0,0,0,0,0,0,0,0,438,
+138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,438,
+138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,109,111,111,140,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,438,
+139,111,111,473,111,111,111,112,111,111,111,473,111,111,111,110,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,109,111,111,111,114,0,0,115,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,438,
+138,0,0,0,0,0,0,138,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,445,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,136,111,111,111,112,111,111,111,111,111,111,111,114,
 138,0,0,0,0,0,0,138,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,141,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,438,
 138,0,0,0,0,0,0,138,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,139,111,111,140,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,438,
 138,0,0,0,0,0,0,138,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,115,0,0,138,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,138,0,0,0,0,0,0,0,438,
@@ -383,39 +383,17 @@
   <object id="190" name="wall" x="2576" y="448" width="32" height="128"/>
   <object id="194" name="wall" x="80" y="1808" width="32" height="32"/>
   <object id="195" name="wall" x="400" y="1808" width="32" height="32"/>
-  <object id="196" name="player" x="2256" y="1808" width="32" height="32"/>
-  <object id="199" name="zombie" x="1680" y="1808" width="32" height="32"/>
-  <object id="201" name="zombie" x="1104" y="1360" width="32" height="32"/>
-  <object id="203" name="zombie" x="2064" y="80" width="32" height="32"/>
-  <object id="205" name="zombie" x="1040" y="80" width="32" height="32"/>
-  <object id="206" name="zombie" x="1104" y="464" width="32" height="32"/>
-  <object id="208" name="zombie" x="208" y="1808" width="32" height="32"/>
-  <object id="210" name="zombie" x="208" y="144" width="32" height="32"/>
-  <object id="215" name="zombie" x="3024" y="1808" width="32" height="32"/>
   <object id="219" name="wall" x="0" y="1904" width="3136" height="16"/>
   <object id="220" name="wall" x="449" y="0" width="3071" height="16"/>
-  <object id="223" name="health" x="1168" y="1616" width="32" height="32"/>
-  <object id="224" name="gun" x="2192" y="1488" width="32" height="32"/>
-  <object id="225" name="machinegun" x="400" y="1312" width="32" height="16"/>
   <object id="227" name="wall" x="2704" y="144" width="32" height="32"/>
   <object id="228" name="wall" x="2704" y="208" width="32" height="32"/>
   <object id="229" name="wall" x="2704" y="464" width="32" height="32"/>
   <object id="230" name="wall" x="2704" y="528" width="32" height="32"/>
-  <object id="231" name="bullets_gun" x="2320" y="1424" width="32" height="32"/>
-  <object id="232" name="bullets_machine" x="2848" y="1808" width="32" height="32"/>
-  <object id="233" name="bullets_machine" x="912" y="1744" width="32" height="32"/>
-  <object id="234" name="bullets_machine" x="80" y="352" width="32" height="16"/>
-  <object id="235" name="zombie" x="272" y="336" width="32" height="32"/>
-  <object id="236" name="zombie" x="208" y="784" width="32" height="32"/>
-  <object id="237" name="zombie" x="144" y="1296" width="32" height="32"/>
-  <object id="238" name="zombie" x="848" y="1232" width="32" height="32"/>
-  <object id="240" name="health" x="2256" y="1552" width="32" height="32"/>
-  <object id="242" name="health" x="1744" y="80" width="32" height="32"/>
   <object id="244" name="door" x="3136" y="256" width="64" height="64"/>
   <object id="246" name="wall" x="3968" y="2688" width="448" height="64"/>
   <object id="247" name="wall" x="4480" y="2688" width="320" height="64"/>
   <object id="248" name="wall" x="3968" y="3008" width="64" height="176"/>
-  <object id="249" name="wall" x="3966" y="2736" width="64" height="208"/>
+  <object id="249" name="wall" x="3966" y="2752" width="64" height="192"/>
   <object id="250" name="wall" x="4784" y="64" width="16" height="2624"/>
   <object id="252" name="wall" x="3521" y="0" width="1279" height="64"/>
   <object id="253" name="wall" x="3520" y="64" width="64" height="192"/>
@@ -424,46 +402,9 @@
   <object id="258" name="wall" x="3200" y="448" width="384" height="64"/>
   <object id="259" name="wall" x="3968" y="320" width="64" height="192"/>
   <object id="260" name="wall" x="3968" y="512" width="816" height="64"/>
-  <object id="261" name="wall" x="0" y="3184" width="4736" height="16"/>
-  <object id="263" name="machinegun" x="3280" y="80" width="32" height="32"/>
-  <object id="264" name="health" x="3344" y="80" width="32" height="32"/>
-  <object id="265" name="bullets_gun" x="3408" y="80" width="32" height="32"/>
-  <object id="266" name="bullets_machine" x="3344" y="208" width="32" height="32"/>
-  <object id="267" name="zombie" x="3408" y="272" width="32" height="32"/>
-  <object id="268" name="zombie" x="3280" y="336" width="32" height="32"/>
-  <object id="269" name="health" x="3728" y="80" width="48" height="32"/>
-  <object id="270" name="bullets_machine" x="3856" y="208" width="48" height="32"/>
-  <object id="271" name="zombie" x="3536" y="976" width="32" height="32"/>
-  <object id="272" name="zombie" x="3856" y="1104" width="32" height="32"/>
-  <object id="273" name="zombie" x="3408" y="1232" width="32" height="32"/>
-  <object id="274" name="bullets_machine" x="2192" y="1360" width="32" height="32"/>
-  <object id="276" name="zombie" x="3664" y="336" width="32" height="32"/>
-  <object id="277" name="zombie" x="4624" y="400" width="32" height="32"/>
-  <object id="278" name="hostage" x="336" y="80" width="32" height="32"/>
-  <object id="280" name="hostage" x="1232" y="160" width="32" height="32"/>
-  <object id="281" name="hostage" x="528" y="1744" width="32" height="32"/>
-  <object id="282" name="zombie" x="593" y="1232" width="32" height="32"/>
-  <object id="283" name="hostage" x="1232" y="416" width="32" height="32"/>
-  <object id="284" name="hostage" x="2256" y="1232" width="32" height="32"/>
+  <object id="261" name="wall" x="-1" y="3184" width="4736" height="16"/>
   <object id="285" name="door2" x="3136" y="2432" width="64" height="64"/>
-  <object id="286" name="zombie" x="1616" y="2640" width="32" height="32"/>
-  <object id="287" name="zombie" x="1552" y="2704" width="32" height="32"/>
-  <object id="288" name="zombie" x="1616" y="2768" width="32" height="32"/>
-  <object id="289" name="zombie" x="1680" y="2704" width="32" height="32"/>
-  <object id="290" name="hostage" x="1616" y="2704" width="32" height="32"/>
-  <object id="291" name="bullets_machine" x="2640" y="2064" width="32" height="32"/>
-  <object id="292" name="bullets_machine" x="2704" y="3024" width="32" height="32"/>
-  <object id="293" name="health" x="2768" y="2384" width="32" height="32"/>
-  <object id="294" name="health" x="400" y="2000" width="32" height="32"/>
-  <object id="295" name="zombie" x="1456" y="2928" width="32" height="32" rotation="180"/>
-  <object id="296" name="zombie" x="975" y="3087" width="32" height="32"/>
   <object id="297" name="wall" x="3136" y="2496" width="64" height="688"/>
-  <object id="298" name="shotgun" x="3984" y="720" width="32" height="32"/>
-  <object id="299" name="bullets_shotgun" x="3856" y="656" width="32" height="32"/>
-  <object id="300" name="bullets_shotgun" x="3408" y="2016" width="32" height="32"/>
-  <object id="301" name="zombie" x="3664" y="2128" width="32" height="32"/>
-  <object id="302" name="bullets_shotgun" x="3920" y="2128" width="32" height="32"/>
-  <object id="303" name="hostage" x="3792" y="2272" width="32" height="32"/>
   <object id="304" name="wall" x="768" y="1920" width="192" height="128"/>
   <object id="305" name="wall" x="832" y="2048" width="192" height="64"/>
   <object id="306" name="wall" x="896" y="2112" width="128" height="192"/>
@@ -474,17 +415,7 @@
   <object id="311" name="wall" x="1216" y="2880" width="64" height="64"/>
   <object id="314" name="wall" x="1152" y="2944" width="128" height="64"/>
   <object id="315" name="wall" x="1280" y="3136" width="192" height="48"/>
-  <object id="316" name="bridge" x="1280" y="3008" width="128" height="128"/>
   <object id="317" name="rescue_zone" x="64" y="2560" width="512" height="576"/>
-  <object id="320" name="hostage" x="4624" y="1616" width="32" height="32"/>
-  <object id="321" name="bullets_machine" x="4496" y="1296" width="32" height="32"/>
-  <object id="322" name="bullets_machine" x="4496" y="2000" width="32" height="32"/>
-  <object id="323" name="bullets_gun" x="3792" y="1616" width="32" height="32"/>
-  <object id="324" name="bullets_shotgun" x="4496" y="784" width="32" height="32"/>
-  <object id="325" name="zombie" x="4496" y="1488" width="32" height="32"/>
-  <object id="326" name="zombie" x="4432" y="1552" width="32" height="32"/>
-  <object id="327" name="zombie" x="4432" y="1680" width="32" height="32"/>
-  <object id="328" name="zombie" x="4112" y="1808" width="32" height="32"/>
   <object id="329" name="wall" x="4224" y="1152" width="560" height="64"/>
   <object id="330" name="wall" x="4224" y="1216" width="64" height="576"/>
   <object id="331" name="wall" x="4288" y="1728" width="128" height="64"/>
@@ -493,13 +424,131 @@
   <object id="334" name="wall" x="3584" y="1536" width="64" height="960"/>
   <object id="335" name="wall" x="3648" y="2432" width="768" height="64"/>
   <object id="336" name="wall" x="4480" y="2432" width="304" height="64"/>
-  <object id="337" name="zombie" x="1296" y="2512" width="32" height="32"/>
-  <object id="338" name="bullets_shotgun" x="2896" y="2640" width="32" height="32"/>
-  <object id="340" x="0" y="1920" width="16" height="1264"/>
+  <object id="340" name="wall" x="0" y="1920" width="16" height="1264"/>
   <object id="343" name="wall" x="1280" y="2944" width="64" height="64"/>
-  <object id="344" x="4736" y="2752" width="64" height="448"/>
-  <object id="346" name="zombie" x="1936" y="2064" width="32" height="32"/>
-  <object id="347" name="zombie" x="1872" y="2256" width="32" height="32"/>
-  <object id="348" name="zombie" x="2000" y="2512" width="32" height="32"/>
+  <object id="344" name="wall" x="4736" y="2752" width="64" height="448"/>
+  <object id="368" name="wall" x="3968" y="576" width="64" height="256"/>
+  <object id="369" name="wall" x="3968" y="896" width="64" height="256"/>
+  <object id="370" name="wall" x="3968" y="1152" width="256" height="64"/>
+  <object id="433" name="player" x="4560" y="3088" width="32" height="32"/>
+  <object id="434" name="player" x="80" y="2000" width="32" height="32"/>
+  <object id="435" name="player" x="2192" y="1488" width="32" height="32"/>
+  <object id="354" name="hostage" x="208" y="144" width="32" height="32"/>
+  <object id="355" name="hostage" x="208" y="1808" width="32" height="32"/>
+  <object id="356" name="hostage" x="528" y="1744" width="32" height="32"/>
+  <object id="357" name="hostage" x="976" y="144" width="32" height="32"/>
+  <object id="358" name="hostage" x="1232" y="400" width="32" height="32"/>
+  <object id="359" name="hostage" x="2768" y="80" width="32" height="32"/>
+  <object id="360" name="hostage" x="2768" y="592" width="32" height="32"/>
+  <object id="361" name="hostage" x="1680" y="1616" width="32" height="32"/>
+  <object id="362" name="hostage" x="3024" y="1808" width="32" height="32"/>
+  <object id="363" name="hostage" x="3408" y="80" width="32" height="32"/>
+  <object id="364" name="hostage" x="4688" y="144" width="32" height="32"/>
+  <object id="365" name="hostage" x="4688" y="400" width="32" height="32"/>
+  <object id="366" name="hostage" x="4624" y="656" width="32" height="32"/>
+  <object id="367" name="hostage" x="4624" y="912" width="32" height="32"/>
+  <object id="375" name="hostage" x="4624" y="1296" width="32" height="32"/>
+  <object id="377" name="hostage" x="4688" y="1872" width="32" height="32"/>
+  <object id="378" name="hostage" x="4624" y="2832" width="32" height="32"/>
+  <object id="379" name="hostage" x="3600" y="3088" width="32" height="32"/>
+  <object id="380" name="hostage" x="2832" y="3088" width="32" height="32"/>
+  <object id="381" name="hostage" x="1104" y="2000" width="32" height="32"/>
+  <object id="382" name="hostage" x="2320" y="80" width="32" height="32"/>
+  <object id="383" name="zombie" x="208" y="336" width="32" height="32"/>
+  <object id="384" name="zombie" x="144" y="1296" width="32" height="32"/>
+  <object id="385" name="zombie" x="592" y="1232" width="32" height="32"/>
+  <object id="386" name="zombie" x="848" y="1232" width="32" height="32"/>
+  <object id="387" name="zombie" x="1104" y="144" width="32" height="32"/>
+  <object id="388" name="zombie" x="528" y="80" width="32" height="32"/>
+  <object id="389" name="zombie" x="1104" y="528" width="32" height="32"/>
+  <object id="390" name="zombie" x="272" y="1616" width="32" height="32"/>
+  <object id="391" name="zombie" x="464" y="912" width="32" height="32"/>
+  <object id="392" name="zombie" x="1168" y="1424" width="32" height="32"/>
+  <object id="393" name="zombie" x="1744" y="1296" width="32" height="32"/>
+  <object id="394" name="zombie" x="1744" y="1808" width="32" height="32"/>
+  <object id="395" name="zombie" x="2832" y="1808" width="32" height="32"/>
+  <object id="396" name="zombie" x="3024" y="1184" width="32" height="32"/>
+  <object id="397" name="zombie" x="3024" y="80" width="32" height="32"/>
+  <object id="398" name="zombie" x="2768" y="208" width="32" height="32"/>
+  <object id="399" name="zombie" x="2832" y="464" width="32" height="32"/>
+  <object id="400" name="zombie" x="2064" y="80" width="32" height="32"/>
+  <object id="401" name="zombie" x="1488" y="80" width="32" height="32"/>
+  <object id="402" name="zombie" x="1488" y="656" width="32" height="32"/>
+  <object id="403" name="zombie" x="3472" y="272" width="32" height="32"/>
+  <object id="404" name="zombie" x="4368" y="144" width="32" height="32"/>
+  <object id="405" name="zombie" x="4176" y="336" width="32" height="32"/>
+  <object id="406" name="zombie" x="3856" y="208" width="32" height="32"/>
+  <object id="407" name="zombie" x="4304" y="848" width="32" height="32"/>
+  <object id="408" name="zombie" x="4496" y="720" width="32" height="32"/>
+  <object id="409" name="zombie" x="4368" y="1424" width="32" height="32"/>
+  <object id="410" name="zombie" x="4688" y="1424" width="32" height="32"/>
+  <object id="411" name="zombie" x="3920" y="1744" width="32" height="32"/>
+  <object id="412" name="zombie" x="4304" y="2128" width="32" height="32"/>
+  <object id="413" name="zombie" x="4240" y="3024" width="32" height="32"/>
+  <object id="414" name="zombie" x="3344" y="2960" width="32" height="32"/>
+  <object id="417" name="zombie" x="2512" y="2256" width="32" height="32"/>
+  <object id="419" name="zombie" x="1296" y="2064" width="32" height="32"/>
+  <object id="420" name="zombie" x="1680" y="3024" width="32" height="32"/>
+  <object id="421" name="zombie" x="1680" y="2384" width="32" height="32"/>
+  <object id="422" name="zombie" x="3024" y="2000" width="32" height="32"/>
+  <object id="423" name="zombie" x="3024" y="2832" width="32" height="32"/>
+  <object id="424" name="zombie" x="784" y="2960" width="32" height="32"/>
+  <object id="425" name="zombie" x="528" y="2128" width="32" height="32"/>
+  <object id="426" name="zombie" x="720" y="2384" width="32" height="32"/>
+  <object id="427" name="zombie" x="2256" y="2640" width="32" height="32"/>
+  <object id="428" name="zombie" x="2576" y="2448" width="32" height="32"/>
+  <object id="429" name="zombie" x="3344" y="1936" width="32" height="32"/>
+  <object id="430" name="zombie" x="3856" y="2128" width="32" height="32"/>
+  <object id="431" name="zombie" x="3408" y="720" width="32" height="32"/>
+  <object id="432" name="zombie" x="3728" y="1168" width="32" height="32"/>
+  <object id="436" name="gun" x="2256" y="1296" width="32" height="32"/>
+  <object id="437" name="gun" x="4560" y="2960" width="32" height="32"/>
+  <object id="438" name="gun" x="272" y="1936" width="32" height="32"/>
+  <object id="439" name="machinegun" x="912" y="2768" width="32" height="32"/>
+  <object id="440" name="machinegun" x="3280" y="3088" width="32" height="32"/>
+  <object id="441" name="machinegun" x="336" y="1680" width="32" height="32"/>
+  <object id="442" name="health" x="4112" y="1552" width="32" height="32"/>
+  <object id="443" name="health" x="4496" y="1232" width="32" height="32"/>
+  <object id="444" name="health" x="4560" y="144" width="32" height="32"/>
+  <object id="445" name="health" x="3280" y="80" width="32" height="32"/>
+  <object id="446" name="health" x="1680" y="80" width="32" height="32"/>
+  <object id="447" name="health" x="1680" y="1424" width="32" height="32"/>
+  <object id="448" name="health" x="2192" y="1744" width="32" height="32"/>
+  <object id="449" name="health" x="1168" y="1616" width="32" height="32"/>
+  <object id="450" name="health" x="336" y="1296" width="32" height="32"/>
+  <object id="451" name="health" x="144" y="528" width="32" height="32"/>
+  <object id="452" name="health" x="1168" y="80" width="32" height="32"/>
+  <object id="453" name="health" x="1104" y="400" width="32" height="32"/>
+  <object id="454" name="health" x="1744" y="2064" width="32" height="32"/>
+  <object id="455" name="health" x="1872" y="2640" width="32" height="32"/>
+  <object id="456" name="bullets_gun" x="4432" y="2832" width="32" height="32"/>
+  <object id="457" name="bullets_gun" x="4624" y="2128" width="32" height="32"/>
+  <object id="458" name="bullets_gun" x="3728" y="1616" width="32" height="32"/>
+  <object id="459" name="bullets_gun" x="3728" y="2320" width="32" height="32"/>
+  <object id="460" name="bullets_gun" x="80" y="2384" width="32" height="32"/>
+  <object id="461" name="bullets_gun" x="400" y="3024" width="32" height="32"/>
+  <object id="462" name="bullets_gun" x="1232" y="2192" width="32" height="32"/>
+  <object id="463" name="bullets_gun" x="2320" y="1808" width="32" height="32"/>
+  <object id="464" name="bullets_gun" x="208" y="1360" width="32" height="32"/>
+  <object id="465" name="bullets_machine" x="656" y="2000" width="32" height="32"/>
+  <object id="466" name="bullets_machine" x="96" y="3024" width="32" height="32"/>
+  <object id="468" name="bullets_machine" x="2192" y="2960" width="32" height="32"/>
+  <object id="469" name="bullets_machine" x="2256" y="2000" width="32" height="32"/>
+  <object id="470" name="bullets_machine" x="336" y="1808" width="32" height="32"/>
+  <object id="471" name="bullets_machine" x="272" y="80" width="32" height="32"/>
+  <object id="472" name="bullets_machine" x="1168" y="208" width="32" height="32"/>
+  <object id="473" name="bullets_machine" x="1744" y="208" width="32" height="32"/>
+  <object id="474" name="bullets_machine" x="1744" y="1488" width="32" height="32"/>
+  <object id="475" name="bullets_machine" x="1232" y="1744" width="32" height="32"/>
+  <object id="476" name="bullets_machine" x="3088" y="1360" width="32" height="32"/>
+  <object id="477" name="bullets_machine" x="2640" y="80" width="32" height="32"/>
+  <object id="478" name="bullets_machine" x="3408" y="336" width="32" height="32"/>
+  <object id="479" name="bullets_machine" x="4560" y="336" width="32" height="32"/>
+  <object id="480" name="bullets_machine" x="4176" y="656" width="32" height="32"/>
+  <object id="481" name="bullets_machine" x="4624" y="1552" width="32" height="32"/>
+  <object id="482" name="bullets_machine" x="4240" y="1936" width="32" height="32"/>
+  <object id="483" name="bullets_machine" x="4112" y="2832" width="32" height="32"/>
+  <object id="484" name="bullets_machine" x="3856" y="3088" width="32" height="32"/>
+  <object id="485" name="bullets_machine" x="3024" y="1936" width="32" height="32"/>
  </objectgroup>
 </map>

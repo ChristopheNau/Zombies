@@ -517,9 +517,9 @@ class Mob(pg.sprite.Sprite):
             Explosion(self.game, self.rect.centerx, self.rect.centery)
             # if all zombies are killed => game won
             self.game.zombies_killed += 1
-            if self.game.total_zombies - self.game.zombies_killed == 0:
-                self.game.game_over_reason = "zombies_killed"
-                self.game.playing = False
+            #if self.game.total_zombies - self.game.zombies_killed == 0:
+            #    self.game.game_over_reason = "zombies_killed"
+            #    self.game.playing = False
                 
 
     # draw health rectangle above the mob

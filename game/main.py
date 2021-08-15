@@ -63,7 +63,14 @@ class Game:
         # nb Zombies total / killed
         self.zombies_killed = 0
         self.total_zombies = 0
-        
+
+        # the player can spawn in various locations on the map
+        # the probabily of creating the player for a "player" tile
+        # increases
+        self.player_created = False
+        self.player_create_proba = 33
+
+
         self.running = True
 
     def load_data(self):
@@ -147,7 +154,7 @@ class Game:
         # old version: uses simple text files
         #self.map = Map(os.path.join(self.map_folder, "map3.txt"))
         # new version: uses a tiled file
-        self.map = TiledMap(os.path.join(self.map_folder, "office_2nd_floor.tmx"))
+        self.map = TiledMap(os.path.join(self.map_folder, "level1.tmx"))
         self.map_img = self.map.make_map()
         # get the map's rectangle to be able to locate the map on the screen for where to draw it
         self.map_rect = self.map_img.get_rect()
@@ -158,8 +165,16 @@ class Game:
             object_center = vec(tile_object.x + tile_object.width / 2,
                               tile_object.y + tile_object.height / 2)
             # if the object is a player => spawn the player at the object's position
+            # create the player randomly in one of the possible locations on the map
             if tile_object.name == "player":
-                self.player = Player(self, object_center.x, object_center.y)
+                n = random.randint(0, 101)
+                if n < self.player_create_proba and not self.player_created:
+                    self.player = Player(self, object_center.x, object_center.y)
+                    self.player_created = True
+                else:
+                    # player not created for this tile
+                    # increase the probability to create it for the next "player" tile
+                    self.player_create_proba += 34
 
             # all obstacles have the name "wall" in the tmx file
             if tile_object.name == "wall":
@@ -173,23 +188,24 @@ class Game:
                            tile_object.y, tile_object.width,
                            tile_object.height)
             # spawn the zombies
-            if tile_object.name == "zombie":
-                #print(f"Spawn a mob at ({object_center.x}, {object_center.y}) which is tile ({int(object_center.x // TILESIZE)}, {int(object_center.y // TILESIZE)}) - Neighbors= {list(find_neighbors(self, (object_center // TILESIZE)))}")
-                Mob(self, object_center.x, object_center.y)
-                self.total_zombies += 1
+            if tile_object.name == "zombie" and random.randint(0, 101) > MOB_SPAWN_PROBABILITY:
+                    Mob(self, object_center.x, object_center.y)
+                    self.total_zombies += 1
             # spawn the items
-            if tile_object.name == "health":
+            if tile_object.name == "health" and random.randint(0, 101) < ITEM_SPAWN_PROBABILITY["health"]:
                 Item(self, object_center, "health")
-            if tile_object.name == "gun":
+            if tile_object.name == "gun" and random.randint(0, 101) < ITEM_SPAWN_PROBABILITY["gun"]:
                 Item(self, object_center, "gun")
-            if tile_object.name == "machinegun":
+            if tile_object.name == "machinegun" and random.randint(
+                    0, 101) < ITEM_SPAWN_PROBABILITY["machine_gun"]:
                 Item(self, object_center, "machine")
-            if tile_object.name == "bullets_gun":
+            if tile_object.name == "bullets_gun" and random.randint(
+                    0, 101) < ITEM_SPAWN_PROBABILITY["bullets_gun"]:
                 Item(self, object_center, "bullets_gun")
-            if tile_object.name == "bullets_machine":
+            if tile_object.name == "bullets_machine"  and random.randint(0, 101) < ITEM_SPAWN_PROBABILITY["bullets_machine"]:
                 Item(self, object_center, "bullets_machine")
             # spawn the hostages
-            if tile_object.name == "hostage":
+            if tile_object.name == "hostage" and random.randint(0, 101) < HOSTAGE_SPAWN_PROBABILITY:
                 self.total_hostages += 1
                 Hostage(self, object_center.x, object_center.y)
 

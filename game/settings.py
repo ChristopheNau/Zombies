@@ -142,10 +142,13 @@ MOB_KNOCKBACK = 20
 MOB_AVOID_RADIUS = 50
 # how far the mobs can see
 # if player is closer, mob rush towards it
-MOB_DETECT_RADIUS = 300
+MOB_DETECT_RADIUS = 150
 # how far the mobs can "smell" the player
 # if player is closer, mob start to move towards it, following the shortest path
 MOB_SEARCH_RADIUS = 600
+# probability of creating a mob for each "zombie" tile in the map
+MOB_SPAWN_PROBABILITY = 50
+
 
 # Hostages
 # how far in the hostages can see
@@ -155,6 +158,8 @@ HOSTAGE_FRICTION = -1
 HOSTAGE_HIT_RECT = pg.Rect(0, 0, 30, 30)
 HOSTAGE_AVOID_RADIUS = 75
 HOSTAGE_HEALTH = 25
+# probability of creating an hostage for each "hostage" tile in the map
+HOSTAGE_SPAWN_PROBABILITY = 33
 
 # Hostage hit animationn (alpha change)
 HOSTAGE_DAMAGE_ALPHA = [i for i in range(0, 256, 25)]
@@ -169,6 +174,14 @@ HEALTH_PACK_AMOUNT = 20
 BULLET_PACK_AMOUNT_MACHINE = 25
 # nb of bullets in the bullet packs
 BULLET_PACK_AMOUNT_GUN = 10
+# probability of adding items to the map
+ITEM_SPAWN_PROBABILITY = {
+  "health": 50,
+  "gun": 100,
+  "machine_gun": 100,
+  "bullets_gun": 75,
+  "bullets_machine": 50
+}
 
 # how many pixels up and down the items will jump (tweening)
 BOB_RANGE = 15

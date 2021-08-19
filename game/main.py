@@ -64,12 +64,22 @@ class Game:
         self.zombies_killed = 0
         self.total_zombies = 0
 
+        # keep track of zombies tiles in the map to randomly re-spawn zombies
+        self.zombies_location = []
+        self.zombies_respawn_timer = pg.time.get_ticks()
+
+
         # the player can spawn in various locations on the map
         # the probabily of creating the player for a "player" tile
         # increases
         self.player_created = False
         self.player_create_proba = 33
+        self.player_can_join_rescue_zone = False
 
+
+        # variable to keep track of how long the hostages have been safe for
+        self.all_hostages_safe = False
+        self.countdown_win = pg.time.get_ticks()
 
         self.running = True
 
@@ -112,6 +122,8 @@ class Game:
         self.player_hit_sounds = []
         for snd in PLAYER_HIT_SOUNDS:
             self.player_hit_sounds.append(pg.mixer.Sound(os.path.join(self.sound_folder, snd)))
+        # hostage saved sound
+        self.hostage_rescued_sound = pg.mixer.Sound(os.path.join(self.sound_folder, HOSTAGE_RESCUED_SOUND))
 
         # font
         self.title_font = os.path.join(self.img_folder, TITLE_FONT_NAME)
@@ -125,6 +137,9 @@ class Game:
 
     # start a new game
     def new(self):
+        # indicate that the player hasn't been created yet
+        # this is necessary on game restart
+        self.player_created = False
         # put all sprites in a group, so we can easily Update them and Draw (render) them
         # use LayeredUpdate() instead of Group() to easily be able to control
         # which sprites are on top of which
@@ -189,8 +204,9 @@ class Game:
                            tile_object.height)
             # spawn the zombies
             if tile_object.name == "zombie" and random.randint(0, 101) > MOB_SPAWN_PROBABILITY:
-                    Mob(self, object_center.x, object_center.y)
-                    self.total_zombies += 1
+                Mob(self, object_center.x, object_center.y)
+                self.total_zombies += 1
+                self.zombies_location.append(object_center)
             # spawn the items
             if tile_object.name == "health" and random.randint(0, 101) < ITEM_SPAWN_PROBABILITY["health"]:
                 Item(self, object_center, "health")
@@ -251,6 +267,7 @@ class Game:
         for mob in self.mob_sprites:
             # if mob can "smell" the player, recalculate the shortest path to the player
             if mob.target_dist.length_squared() < MOB_SEARCH_RADIUS ** 2:
+                mob.chasing_player = True
                 #mob.path = dijkstra_search(self, mob.get_tile(), self.player.get_tile())
                 mob.path = a_star_search(self, mob.get_tile(), self.player.get_tile())
                 mob.path_to_player = follow_path(self.player.get_tile(),
@@ -289,6 +306,12 @@ class Game:
         if now - self.pathfinding_timer > PATHFINDING_REFRESH_TIMER:
             self.pathfinding_timer = now
             self.calculate_path_to_player()
+        # respawn zombies every once in a while
+        if now - self.zombies_respawn_timer > MOB_SPAWN_DELAY:
+            self.zombies_respawn_timer = now
+            mob_location = random.choice(self.zombies_location)
+            Mob(self, mob_location.x, mob_location.y)
+            self.total_zombies += 1
 
         # all sprites are in a group. The line below is all we need in the Update section
         self.all_sprites.update()
@@ -389,11 +412,43 @@ class Game:
             #print("Hostage rescued")
             hit.kill()
             self.hostage_saved += 1
+            self.hostage_rescued_sound.play()
             if self.total_hostages - self.hostage_saved == 0:
+                self.all_hostages_safe = True
                 # all hostage are safe
-                self.game_over_reason = "all_hostage_rescued"
-                self.playing = False
+                # v0 => player wins
+                #self.game_over_reason = "all_hostage_rescued"
+                #self.playing = False
+                # v1 => start countdown and make all the zombies move towards the landing zone
+                # the player only wins after the countdow expired
+                #print(f"Keep the hostages safe for {HOSTAGE_RESCUED_COUNTDOWN // 1000}s to win")
+                self.countdown_win = pg.time.get_ticks()
+                # all zombies move towards the player's last position
+                for mob in self.mob_sprites:
+                    mob.speed *= 5
+                    mob.chasing_player = True
+                    mob.path = a_star_search(self, mob.get_tile(), self.player.get_tile())
+                    mob.path_to_player = follow_path(self.player.get_tile(),
+                                                 mob.path)
+                    mob.path_to_player.reverse()
 
+        # check if all hostage have been rescued long enough
+        # if so the player is allowed to join the rescue zone himself and win
+        if self.all_hostages_safe == True:
+            now = pg.time.get_ticks()
+            if now - self.countdown_win > HOSTAGE_RESCUED_COUNTDOWN:
+                self.player_can_join_rescue_zone = True
+           
+
+        # collision between player and rescue zone
+        # when collision and all hostages are safe and player is allowed to join rescus zone => win
+        if self.player_can_join_rescue_zone:
+            if now - self.countdown_win > HOSTAGE_RESCUED_COUNTDOWN * 2:
+                hits = pg.sprite.spritecollide(self.player, self.rescue_sprites, False, False)
+                if hits:
+                    self.game_over_reason = "all_hostage_rescued"
+                    self.playing = False
+           
     # Game loop - events
     def events(self):
         for event in pg.event.get():
@@ -435,14 +490,13 @@ class Game:
                 # 't' prints if the tile under the mouse collides with a wall
                 if event.key == pg.K_t:
                     print(f"Neighbors of {self.player.get_tile()} => {find_neighbors(self, self.player.get_tile())}")
-
-            #if event.type == pg.KEYUP:
-            # 'a' recalculates the path to player
-            #    if event.key == pg.K_a:
-            #        start = time.time()
-            #        print("Calculating....")
-            #        self.calculate_path_to_player()
-            #        print(f"Done in {time.time() - start}")
+                # 'z' prints the number of zombies left
+                if event.key == pg.K_z:
+                    chaising_player = 0
+                    for zombie in self.mob_sprites:
+                        if zombie.chasing_player:
+                            chaising_player += 1
+                    print(f"# of zombies left {self.total_zombies} - chasing: {chaising_player}")
 
     # draw game's grid
     def draw_grid(self):

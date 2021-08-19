@@ -26,4 +26,5 @@ This is a simple Tile Based Game to experiment with the basic concepts of game d
 
 ## Goal of the game 
 locate and bring all the hostage back to the rescue zone. 
-You win the game by either killing all the zombies or rescuing all the hostages
+You win the game by either killing all the zombies or rescuing all the hostages, and escaping yourself.
+The player can escape only if all the hostages have been rescued and stayed long enough in the rescue zone

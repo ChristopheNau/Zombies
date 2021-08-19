@@ -148,18 +148,23 @@ MOB_DETECT_RADIUS = 150
 MOB_SEARCH_RADIUS = 600
 # probability of creating a mob for each "zombie" tile in the map
 MOB_SPAWN_PROBABILITY = 50
-
+# re-spawn mobs every X ms
+MOB_SPAWN_DELAY = 90000
 
 # Hostages
 # how far in the hostages can see
 HOSTAGE_DETECT_RADIUS = 500
-HOSTAGE_SPEED = 100
+HOSTAGE_SPEED = 200
 HOSTAGE_FRICTION = -1
 HOSTAGE_HIT_RECT = pg.Rect(0, 0, 30, 30)
 HOSTAGE_AVOID_RADIUS = 75
 HOSTAGE_HEALTH = 25
 # probability of creating an hostage for each "hostage" tile in the map
 HOSTAGE_SPAWN_PROBABILITY = 33
+# sound to play when an hostage is rescued
+HOSTAGE_RESCUED_SOUND = "hostage_rescued.wav"
+# how long between all hostage are rescued and player wins (in ms)
+HOSTAGE_RESCUED_COUNTDOWN = 30000
 
 # Hostage hit animationn (alpha change)
 HOSTAGE_DAMAGE_ALPHA = [i for i in range(0, 256, 25)]

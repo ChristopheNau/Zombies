@@ -404,6 +404,7 @@ class Mob(pg.sprite.Sprite):
         self.target = game.player
         self.path = {}
         self.path_to_player = []
+        self.chasing_player = False
 
     # load all graphical elements for the mobs
     def load_images(self):
@@ -433,6 +434,7 @@ class Mob(pg.sprite.Sprite):
     # make zombie move followig a predefined path
     def zombie_follow_path(self):
         if len(self.path_to_player) == 0:
+            self.chasing_player = False
             return
         else:
             target_tile = vec(self.path_to_player[-1])
@@ -500,6 +502,7 @@ class Mob(pg.sprite.Sprite):
         # if the mob is closer to the player
         # => rush towards the player
         if self.target_dist.length_squared() < MOB_DETECT_RADIUS ** 2:
+            self.chasing_player = True
             # if zombie is close to the player, stop following
             # the predefined path and rush towards the player
             #print(f"Player is close!! New target: {self.game.player.pos} - current pos: {self.pos}")
@@ -517,10 +520,11 @@ class Mob(pg.sprite.Sprite):
             Explosion(self.game, self.rect.centerx, self.rect.centery)
             # if all zombies are killed => game won
             self.game.zombies_killed += 1
+            self.game.total_zombies -= 1
+
             #if self.game.total_zombies - self.game.zombies_killed == 0:
             #    self.game.game_over_reason = "zombies_killed"
             #    self.game.playing = False
-                
 
     # draw health rectangle above the mob
     def draw_health(self):
@@ -852,8 +856,8 @@ class Hostage(pg.sprite.Sprite):
             self.game.player.current_weapon]["BULLET_DAMAGE"]
         # health = 0 => game over
         if self.health <= 0:
-          self.game.game_over_reason = "hostage_killed"
-          self.game.playing = False
+            self.game.game_over_reason = "hostage_killed"
+            self.game.playing = False
 
     # get the mob's current tile
     def get_tile(self):

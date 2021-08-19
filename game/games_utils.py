@@ -188,7 +188,6 @@ def a_star_search(game, start, end):
                 path[next] = vec(current) - vec(next)
     return path
 
-
 # returns the path between 2 tiles
 # must have calculated the path before
 def follow_path(start, path):
@@ -268,7 +267,6 @@ def draw_text(surface, text, font_name, size, color, x, y, align="center"):
 def collide_hit_rect(one, two):
     return one.hit_rect.colliderect(two.rect)
 
-
 # utility class to easily manipulate priority (heap) queues
 # (priority = cost)
 # heap queues automatically order a list by increasing priority of its elements (highest prio is lowest cost)
@@ -292,7 +290,6 @@ class PriorityQueue:
     # if frontier is empty => search ends
     def empty(self):
         return len(self.nodes) == 0
-
 
 # utility class for loading and parsing spritesheets
 class Spritesheet:

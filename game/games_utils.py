@@ -216,9 +216,7 @@ def wait_for_key(game, which_key="any"):
     waiting = True
     while waiting:
         # static screen, don't need to run at a high FPS
-        pg.display.set_caption("{:.2f}".format(game.clock.get_fps()))
         game.clock.tick(10)
-        pg.display.set_caption("{:.2f}".format(game.clock.get_fps()))
 
         # wait for user's action
         for event in pg.event.get():

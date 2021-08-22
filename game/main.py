@@ -39,7 +39,7 @@ class Game:
         # game window
         self.screen = pg.display.set_mode((WIDTH,HEIGHT))
         # tile of the game window
-        #pg.display.set_caption(GAMETITLE)
+        pg.display.set_caption(GAMETITLE)
         # used to handle game speed and to ensure the game runs at the FPS we decide
         self.clock = pg.time.Clock()
         # keyboard repeat rate to keep player moving
@@ -68,14 +68,12 @@ class Game:
         self.zombies_location = []
         self.zombies_respawn_timer = pg.time.get_ticks()
 
-
         # the player can spawn in various locations on the map
         # the probabily of creating the player for a "player" tile
         # increases
         self.player_created = False
         self.player_create_proba = 33
         self.player_can_join_rescue_zone = False
-
 
         # variable to keep track of how long the hostages have been safe for
         self.all_hostages_safe = False
@@ -174,6 +172,9 @@ class Game:
         # get the map's rectangle to be able to locate the map on the screen for where to draw it
         self.map_rect = self.map_img.get_rect()
 
+        # get list of all tiles
+        self.all_tiles = self.map.get_all_tiles()
+
         # go through all the object layer in the map to create the walls and spawn the player
         # the player will be blocked by
         for tile_object in self.map.tmxdata.objects:
@@ -225,9 +226,6 @@ class Game:
                 self.total_hostages += 1
                 Hostage(self, object_center.x, object_center.y)
 
-        # get list of all tiles
-        self.all_tiles = self.map.get_all_tiles()
-
         # create a sprite for each tile and check with ones collide with a wall
         for tile in self.all_tiles:
             # Tiles all have the same weight (TODO: get tile's weight from the TMX file)
@@ -241,7 +239,10 @@ class Game:
         for t in self.tile_sprites:
             current = (t.rect.x // TILESIZE, t.rect.y // TILESIZE)
             #self.passable_tiles[current] = True
-            self.passable_tiles[current] = {"passable": True, "weight": t.weight}
+            self.passable_tiles[current] = {
+                "passable": True,
+                "weight": t.weight
+            }
 
         # camera to follow the player
         self.camera = Camera(self.map.width, self.map.height)
@@ -258,6 +259,7 @@ class Game:
         # keep track of time to know when it's time
         # to recalculate the path to player
         self.pathfinding_timer = pg.time.get_ticks()
+        self.assign_random_goal_to_mob_timer = pg.time.get_ticks()
 
         # actually start the game
         self.run()
@@ -267,6 +269,7 @@ class Game:
         for mob in self.mob_sprites:
             # if mob can "smell" the player, recalculate the shortest path to the player
             if mob.target_dist.length_squared() < MOB_SEARCH_RADIUS ** 2:
+                #print(f"mob chaising player in tile {self.player.get_tile()}")
                 mob.chasing_player = True
                 #mob.path = dijkstra_search(self, mob.get_tile(), self.player.get_tile())
                 mob.path = a_star_search(self, mob.get_tile(), self.player.get_tile())
@@ -274,8 +277,16 @@ class Game:
                                                  mob.path)
                 mob.path_to_player.reverse()
 
-        #for hostage in self.hostage_sprites:
-        #    hostage.path_to_player = follow_path(hostage.get_tile(), self.path)
+    # assign a random goal to the mobs that are far from the player
+    def assign_random_goal_to_mob(self):
+        for mob in self.mob_sprites:
+            # if mob can "smell" the player, recalculate the shortest path to the player
+            if mob.target_dist.length_squared() > MOB_SEARCH_RADIUS ** 2 and not mob.chasing_player:
+                random_tile = vec(random.choice(list(self.passable_tiles.keys())))
+                #print(f"mob moves to random tile: {random_tile}")
+                mob.path = a_star_search(self, mob.get_tile(), random_tile)
+                mob.path_to_player = follow_path(random_tile, mob.path)
+                mob.path_to_player.reverse()
 
     # game loop
     def run(self):
@@ -306,6 +317,10 @@ class Game:
         if now - self.pathfinding_timer > PATHFINDING_REFRESH_TIMER:
             self.pathfinding_timer = now
             self.calculate_path_to_player()
+        # move mob to a random tile if they are far from the player
+        if now - self.assign_random_goal_to_mob_timer > RANDOM_GOAL_REFRESH_TIMER:
+            self.assign_random_goal_to_mob_timer = now
+            self.assign_random_goal_to_mob()
         # respawn zombies every once in a while
         if now - self.zombies_respawn_timer > MOB_SPAWN_DELAY:
             self.zombies_respawn_timer = now
@@ -404,6 +419,18 @@ class Game:
         for hit in hits:
             hit.hit()
 
+        # collision between hostage and mob
+        # when collision => hostage turns into a mob
+        hits = pg.sprite.groupcollide(self.hostage_sprites,
+                                      self.mob_sprites, False, False)
+        for hit in hits:
+            Mob(self, hit.pos.x, hit.pos.y)
+            self.total_zombies += 1
+            hit.kill()
+            self.game_over_reason = "hostage_bit"
+            self.playing = False
+
+
         # collision between hostage and rescue zone
         # when collision => hostage is saved
         hits = pg.sprite.groupcollide(self.hostage_sprites,
@@ -423,6 +450,9 @@ class Game:
                 # the player only wins after the countdow expired
                 #print(f"Keep the hostages safe for {HOSTAGE_RESCUED_COUNTDOWN // 1000}s to win")
                 self.countdown_win = pg.time.get_ticks()
+                # open all doors that might be closed
+                for door in self.door_sprites:
+                    door.kill()
                 # all zombies move towards the player's last position
                 for mob in self.mob_sprites:
                     mob.speed *= 5
@@ -438,7 +468,7 @@ class Game:
             now = pg.time.get_ticks()
             if now - self.countdown_win > HOSTAGE_RESCUED_COUNTDOWN:
                 self.player_can_join_rescue_zone = True
-           
+
 
         # collision between player and rescue zone
         # when collision and all hostages are safe and player is allowed to join rescus zone => win
@@ -448,7 +478,7 @@ class Game:
                 if hits:
                     self.game_over_reason = "all_hostage_rescued"
                     self.playing = False
-           
+
     # Game loop - events
     def events(self):
         for event in pg.event.get():
@@ -485,8 +515,8 @@ class Game:
                     self.draw_debug = not self.draw_debug
                 # 'w' prints the list of passable tiles
                 if event.key == pg.K_w:
-                    for w in self.passable_tiles:
-                        print(w)
+                    for k,v in self.passable_tiles.items():
+                        print(k,v)
                 # 't' prints if the tile under the mouse collides with a wall
                 if event.key == pg.K_t:
                     print(f"Neighbors of {self.player.get_tile()} => {find_neighbors(self, self.player.get_tile())}")
@@ -510,7 +540,7 @@ class Game:
     # Game loop - draw
     def draw(self):
         # display FPS as game's title to check game's performance (whilst developping, for ddebugging)
-        pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
+        #pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
 
         # self.screen.fill(BGCOLOR)
 
@@ -606,7 +636,7 @@ class Game:
 
         draw_text(self.screen, GAME_OVER_MESSAGES[self.game_over_reason][0],
                   self.title_font, 64, WHITE, WIDTH / 2, HEIGHT / 4, "center")
-        draw_text(self.screen, GAME_OVER_MESSAGES[self.game_over_reason][1], self.title_font, 64, WHITE,
+        draw_text(self.screen, GAME_OVER_MESSAGES[self.game_over_reason][1], self.title_font, 47, WHITE,
                   WIDTH / 2, HEIGHT / 4 + 60, "center")
         draw_text(self.screen, "Press RETURN to play again", self.title_font, 40, WHITE, WIDTH / 2, HEIGHT / 2 + 80, "center")
 

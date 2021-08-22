@@ -28,3 +28,4 @@ This is a simple Tile Based Game to experiment with the basic concepts of game d
 locate and bring all the hostage back to the rescue zone. 
 You win the game by either killing all the zombies or rescuing all the hostages, and escaping yourself.
 The player can escape only if all the hostages have been rescued and stayed long enough in the rescue zone
+You lose if you a bit by a zombie, if you kill an hostage or if you let a zombie bite an hostage

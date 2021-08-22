@@ -15,14 +15,17 @@ HIGHSCORE_FILE = "highscore.txt"
 FPS = 60
 
 # how often should we recalculate the path to the player
-PATHFINDING_REFRESH_TIMER = 2000
+PATHFINDING_REFRESH_TIMER = 2_000
+# how often should we assign a random goal to the mob that are too far from the player
+RANDOM_GOAL_REFRESH_TIMER = 30_000
 
 # Game over messages
 GAME_OVER_MESSAGES = {
   "player": ["Game Over", "You died"],
-  "all_hostage_rescued": ["You Won", "All hostages are safe"],
+  "all_hostage_rescued": ["You Won", "All hostages are safe and you escaped"],
   "hostage_killed": ["Game Over", "You killed an hostage"],
-  "zombies_killed": ["You Won", "All Zombies are killed"]
+  "zombies_killed": ["You Won", "All Zombies are killed"],
+  "hostage_bit": ["Game Over", "You let a zombie bite an hostage"]
 }
 
 # define useful colors
@@ -106,9 +109,9 @@ GUN_PROPERTIES = {
     "GUN_SPREAD": 5,
     # delay between bullet shots
     "BULLET_RATE": 300,
-    "BULLET_SPEED": 1000,
+    "BULLET_SPEED": 1_000,
     # bullet dissappears after 1s
-    "BULLET_LIFETIME": 1000,
+    "BULLET_LIFETIME": 1_000,
     # damage points to mob
     "BULLET_DAMAGE": 10,
     # initial and maximum nb of bullets that come with than gun
@@ -120,11 +123,11 @@ GUN_PROPERTIES = {
     "KICKBACK": 300,
     "GUN_SPREAD": 15,
     "BULLET_RATE": 100,
-    "BULLET_SPEED": 1500,
-    "BULLET_LIFETIME": 1000,
+    "BULLET_SPEED": 1_500,
+    "BULLET_LIFETIME": 1_000,
     "BULLET_DAMAGE": 20,
     "NB_BULLETS": 50,
-    "RELOAD_TIME": 3000
+    "RELOAD_TIME": 3_000
   },
 }
 # how long the bullet impact should be displayed for
@@ -142,14 +145,14 @@ MOB_KNOCKBACK = 20
 MOB_AVOID_RADIUS = 50
 # how far the mobs can see
 # if player is closer, mob rush towards it
-MOB_DETECT_RADIUS = 150
+MOB_DETECT_RADIUS = 100
 # how far the mobs can "smell" the player
 # if player is closer, mob start to move towards it, following the shortest path
-MOB_SEARCH_RADIUS = 600
+MOB_SEARCH_RADIUS = 750
 # probability of creating a mob for each "zombie" tile in the map
 MOB_SPAWN_PROBABILITY = 50
 # re-spawn mobs every X ms
-MOB_SPAWN_DELAY = 90000
+MOB_SPAWN_DELAY = 90_000
 
 # Hostages
 # how far in the hostages can see
@@ -164,7 +167,7 @@ HOSTAGE_SPAWN_PROBABILITY = 33
 # sound to play when an hostage is rescued
 HOSTAGE_RESCUED_SOUND = "hostage_rescued.wav"
 # how long between all hostage are rescued and player wins (in ms)
-HOSTAGE_RESCUED_COUNTDOWN = 30000
+HOSTAGE_RESCUED_COUNTDOWN = 30_000
 
 # Hostage hit animationn (alpha change)
 HOSTAGE_DAMAGE_ALPHA = [i for i in range(0, 256, 25)]

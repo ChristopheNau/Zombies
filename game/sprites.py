@@ -402,6 +402,7 @@ class Mob(pg.sprite.Sprite):
         self.speed = random.choice(MOB_SPEEDS)
 
         self.target = game.player
+        self.target_dist = 0
         self.path = {}
         self.path_to_player = []
         self.chasing_player = False
